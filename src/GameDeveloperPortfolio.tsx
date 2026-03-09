@@ -63,6 +63,40 @@ function getYoutubeHoverSrc(url: string): string {
   return `${url}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0`;
 }
 
+function renderPlatformIcon(platform: string): React.JSX.Element | null {
+  if (platform === "PC") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="5" width="18" height="11" rx="2" stroke="currentColor" strokeWidth="1.8"/>
+        <path d="M9 19H15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+        <path d="M12 16V19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      </svg>
+    );
+  }
+
+  if (platform === "Mobile") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="7" y="2.5" width="10" height="19" rx="2.5" stroke="currentColor" strokeWidth="1.8"/>
+        <path d="M10.5 5H13.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+        <circle cx="12" cy="18" r="0.9" fill="currentColor"/>
+      </svg>
+    );
+  }
+
+  if (platform === "VR") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 9.5C4 7.84315 5.34315 6.5 7 6.5H17C18.6569 6.5 20 7.84315 20 9.5V13.2C20 14.8569 18.6569 16.2 17 16.2H14.3L12.7 13.9C12.3728 13.43 11.6272 13.43 11.3 13.9L9.7 16.2H7C5.34315 16.2 4 14.8569 4 13.2V9.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+        <circle cx="8.5" cy="11.3" r="1.1" fill="currentColor"/>
+        <circle cx="15.5" cy="11.3" r="1.1" fill="currentColor"/>
+      </svg>
+    );
+  }
+
+  return null;
+}
+
 export default function GameDeveloperPortfolio() {
 
   const [selectedGame, setSelectedGame] = useState<GameData | null>(null);
@@ -519,17 +553,6 @@ export default function GameDeveloperPortfolio() {
                         className="group cursor-pointer overflow-hidden rounded-[28px] border border-zinc-800 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-white/15 hover:bg-white/[0.05] hover:shadow-black/35 will-change-transform"
                     >
                       <div className="relative isolate aspect-[15/8.45] overflow-hidden rounded-t-[28px]">
-                        <div
-                          className={`absolute left-4 top-4 z-10 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur-sm ${
-                            game.status === "Published"
-                              ? "border-emerald-400/30 bg-emerald-500/20 text-emerald-300"
-                              : game.status === "In Development"
-                                ? "border-amber-400/30 bg-amber-500/20 text-amber-300"
-                                : "border-violet-400/30 bg-violet-500/20 text-violet-300"
-                          }`}
-                        >
-                          {game.status}
-                        </div>
                         <img
                             src={game.image}
                             alt={game.title}
@@ -575,7 +598,23 @@ export default function GameDeveloperPortfolio() {
                       </div>
 
                       <div className="p-5">
-                        <h3 className="text-2xl font-semibold tracking-tight">{game.title}</h3>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <h3 className="text-2xl font-semibold tracking-tight">{game.title}</h3>
+                            {renderPlatformIcon(game.platform)}
+                          </div>
+                          <span
+                            className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur-sm ${
+                              game.status === "Published"
+                                ? "border-emerald-400/30 bg-emerald-500/20 text-emerald-300"
+                                : game.status === "In Development"
+                                  ? "border-amber-400/30 bg-amber-500/20 text-amber-300"
+                                  : "border-violet-400/30 bg-violet-500/20 text-violet-300"
+                            }`}
+                          >
+                            {game.status === "In Development" ? "In Dev" : game.status}
+                          </span>
+                        </div>
                         <p className="mt-1 text-sm text-zinc-400">
                           {game.genre} • {game.platform} • {game.year}
                         </p>
@@ -592,12 +631,6 @@ export default function GameDeveloperPortfolio() {
                           ))}
                         </div>
 
-                        <button
-                            type="button"
-                            className="mt-4 text-sm font-medium text-violet-300 transition-all duration-300 group-hover:translate-x-1 hover:text-violet-200"
-                        >
-                          View details
-                        </button>
                       </div>
                     </article>
                 ))}
@@ -734,14 +767,18 @@ export default function GameDeveloperPortfolio() {
               >
                 <div
                     onClick={(e) => e.stopPropagation()}
-                    className="relative max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-[32px] border border-white/10 bg-[#0a0d18] shadow-2xl shadow-black/50 animate-[modalIn_.25s_ease-out]"
+                    className="relative max-h-[90vh] w-full max-w-5xl overflow-visible rounded-[32px] border border-white/10 bg-[#0a0d18] shadow-2xl shadow-black/50 animate-[modalIn_.25s_ease-out]"
                 >
                   <button
                       type="button"
                       onClick={() => setSelectedGame(null)}
-                      className="absolute right-4 top-4 z-10 rounded-xl bg-gradient-to-r from-red-500 via-rose-500 to-pink-500 px-3 py-2 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:opacity-90 active:scale-[0.99]"
+                      aria-label="Close modal"
+                      className="absolute -right-3 -top-3 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-red-300/20 bg-gradient-to-br from-red-500 via-rose-500 to-pink-500 text-white shadow-xl shadow-black/40 transition-all duration-300 hover:scale-105 hover:brightness-110 active:scale-95"
                   >
-                    Close
+                    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
                   </button>
 
                   <div className="max-h-[90vh] overflow-y-auto">
@@ -774,7 +811,23 @@ export default function GameDeveloperPortfolio() {
                     </div>
 
                     <div className="p-8">
-                      <h3 className="text-3xl font-semibold tracking-tight">{selectedGame.title}</h3>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <h3 className="text-3xl font-semibold tracking-tight">{selectedGame.title}</h3>
+                          {renderPlatformIcon(selectedGame.platform)}
+                        </div>
+                        <span
+                          className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur-sm ${
+                            selectedGame.status === "Published"
+                              ? "border-emerald-400/30 bg-emerald-500/20 text-emerald-300"
+                              : selectedGame.status === "In Development"
+                                ? "border-amber-400/30 bg-amber-500/20 text-amber-300"
+                                : "border-violet-400/30 bg-violet-500/20 text-violet-300"
+                          }`}
+                        >
+                          {selectedGame.status === "In Development" ? "In Dev" : selectedGame.status}
+                        </span>
+                      </div>
                       <p className="mt-2 text-sm text-zinc-400">
                         {selectedGame.genre} • {selectedGame.platform} • {selectedGame.year}
                       </p>
