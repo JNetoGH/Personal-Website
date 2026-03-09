@@ -818,16 +818,16 @@ export default function GameDeveloperPortfolio() {
         .typing-caret {
           display: inline-block;
           width: 2px;
-          height: 0.9em;
+          height: 0.7em;
           margin-left: 6px;
           background: linear-gradient(180deg, #a855f7, #6366f1);
-          animation: caretBlink 1s steps(1) infinite;
+          animation: caretBlink 1.25s steps(1) infinite;
           vertical-align: baseline;
         }
 
         @keyframes caretBlink {
           0%, 50%, 100% { opacity: 1; }
-          25%, 75% { opacity: 0; }
+          35%, 85% { opacity: 0; }
         }
 
         @keyframes fadeIn {
