@@ -24,7 +24,7 @@ type ProfileSuffix = {
 };
 const PROFILE_TYPING_SUFFIXES: ProfileSuffix[] = [
   { text: "s...", highlight: false },
-  { text: " experiences", highlight: true }
+  { text: " stuff", highlight: true }
 ];
 const PROFILE_TYPING_SPEED_MS = 60;
 const PROFILE_BACKSPACE_SPEED_MS = 30;
