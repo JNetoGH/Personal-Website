@@ -12,6 +12,7 @@ export type GameData = {
     link: string;
     video?: string;
     youtube?: string;
+    videoStartOffset?: number;
 };
 
 // defaults
@@ -45,6 +46,7 @@ export const games: GameData[] = [
         youtube: "https://www.youtube.com/embed/tY3SWgjkVto",
         cta: "Play",
         link: "https://play.google.com/store/apps/details?id=com.gamearound.metakartracers",
+        videoStartOffset: 21,
     },
     {
         title: "TrollFall",
@@ -59,6 +61,7 @@ export const games: GameData[] = [
         youtube: "https://www.youtube.com/embed/CeyQQVBW4Ds",
         cta: "Play",
         link: "https://hugo-martins.itch.io/trollfall",
+        videoStartOffset: 10,
     },
     {
         title: "Fish and Hooks",

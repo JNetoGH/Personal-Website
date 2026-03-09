@@ -37,8 +37,6 @@ const technologies = [
   "Azure PlayFab",
   "Python",
   "Git",
-
-
   "HTML / CSS",
   "React",
   "JavaScript",
@@ -56,14 +54,21 @@ const concepts = [
   "Optimization",
 ];
 
-function getYoutubeHoverSrc(url: string): string {
+function getYoutubeHoverSrc(url: string, offset?: number): string {
   const videoId: string = url.split("/").pop() ?? "";
 
   if (videoId.length === 0) {
     return url;
   }
 
-  return `${url}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0`;
+  const start = offset ?? 0;
+  return `${url}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0&start=${start}`;
+}
+
+function getYoutubeModalSrc(url: string, offset?: number): string {
+  const separator = url.includes("?") ? "&" : "?";
+  const start = offset ?? 0;
+  return `${url}${separator}start=${start}`;
 }
 
 function renderPlatformIcon(platform: string): React.JSX.Element | null {
@@ -611,6 +616,12 @@ export default function GameDeveloperPortfolio() {
                                 muted
                                 loop
                                 playsInline
+                                onLoadedMetadata={(e) => {
+                                  const video = e.currentTarget;
+                                  const offset = game.videoStartOffset ?? 0;
+                                  const targetTime = Math.min(offset, Math.max(0, video.duration - 0.1));
+                                  video.currentTime = Number.isFinite(targetTime) ? targetTime : offset;
+                                }}
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";
                                 }}
@@ -622,7 +633,7 @@ export default function GameDeveloperPortfolio() {
                             />
                         ) : game.youtube ? (
                             <iframe
-                                src={getYoutubeHoverSrc(game.youtube)}
+                                src={getYoutubeHoverSrc(game.youtube, game.videoStartOffset)}
                                 title={`${game.title} preview`}
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerPolicy="strict-origin-when-cross-origin"
@@ -858,11 +869,17 @@ export default function GameDeveloperPortfolio() {
                               muted
                               loop
                               playsInline
+                              onLoadedMetadata={(e) => {
+                                const video = e.currentTarget;
+                                const offset = selectedGame.videoStartOffset ?? 0;
+                                const targetTime = Math.min(offset, Math.max(0, video.duration - 0.1));
+                                video.currentTime = Number.isFinite(targetTime) ? targetTime : offset;
+                              }}
                               className="h-full w-full object-cover"
                           />
                       ) : selectedGame.youtube ? (
                           <iframe
-                              src={selectedGame.youtube}
+                              src={getYoutubeModalSrc(selectedGame.youtube, selectedGame.videoStartOffset)}
                               title={selectedGame.title}
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                               referrerPolicy="strict-origin-when-cross-origin"
