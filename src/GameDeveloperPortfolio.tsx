@@ -35,9 +35,10 @@ const technologies = [
   "C#",
   "Netcode",
   "Azure PlayFab",
-  "Git",
   "Python",
-  "C++",
+  "Git",
+
+
   "HTML / CSS",
   "React",
   "JavaScript",
@@ -550,7 +551,7 @@ export default function GameDeveloperPortfolio() {
                     <p className="text-sm text-zinc-400">Availability</p>
                     <h3 className="mt-2 text-xl font-semibold">Freelance & studio roles</h3>
                     <p className="mt-3 text-sm leading-6 text-zinc-300">
-                      Available for remote or on-site roles in gameplay programming and systems design.
+                      Available for remote or on-site roles in gameplay and UI development.
                     </p>
                   </div>
                 </div>
