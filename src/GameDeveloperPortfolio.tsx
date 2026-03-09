@@ -194,8 +194,10 @@ export default function GameDeveloperPortfolio() {
           setProfileTypedLength((v) => v - 1);
         }, PROFILE_BACKSPACE_SPEED_MS);
       } else {
-        setProfileDeleting(false);
-        setProfileSuffixIndex((i) => (i + 1) % PROFILE_TYPING_SUFFIXES.length);
+        timeoutId = window.setTimeout(() => {
+          setProfileDeleting(false);
+          setProfileSuffixIndex((i) => (i + 1) % PROFILE_TYPING_SUFFIXES.length);
+        }, 0);
       }
     }
 
