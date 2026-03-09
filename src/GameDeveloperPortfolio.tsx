@@ -577,7 +577,7 @@ export default function GameDeveloperPortfolio() {
 
               <div className="relative">
                 <div
-                  className={`grid gap-6 sm:grid-cols-2 xl:grid-cols-3 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.games ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                  className={`grid gap-6 sm:grid-cols-2 lg:grid-cols-3 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.games ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
                   style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
                 >
                 {visibleGames.map((game) => (
