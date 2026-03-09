@@ -518,7 +518,7 @@ export default function GameDeveloperPortfolio() {
                         onClick={() => setSelectedGame(game)}
                         className="group cursor-pointer overflow-hidden rounded-[28px] border border-zinc-800 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-white/15 hover:bg-white/[0.05] hover:shadow-black/35 will-change-transform"
                     >
-                      <div className="relative isolate aspect-[15/8.5] overflow-hidden rounded-t-[28px]">
+                      <div className="relative isolate aspect-[15/8.45] overflow-hidden rounded-t-[28px]">
                         <div
                           className={`absolute left-4 top-4 z-10 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur-sm ${
                             game.status === "Published"
