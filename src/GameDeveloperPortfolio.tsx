@@ -1,0 +1,855 @@
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { games, type GameData } from "./Games.ts";
+
+// PAGE SETTINGS
+const HEADER_OPACITY_BLUR_PERCENT = 85;
+const HEADER_VERTICAL_PADDING = "py-3";
+const FOOTER_VERTICAL_PADDING = "py-6";
+
+const SECTION_VERTICAL_PADDING = "py-16";
+const SECTION_DISPLAY_ANIMATION_DURATION = "2000ms";
+const SECTION_ANIMATION_HIDDEN_STATE = "translate-y-20 opacity-0";
+const PLAY_VIDEO_PREVIEW_MOBILE_HEIGHT_PERCENT = 50;
+
+const CONTROLLER_CLIPART_SIZE_PX = 100;
+const CONTROLLER_CLIPART_OFFSET_X_DESKTOP_PX = -80;
+const CONTROLLER_CLIPART_OFFSET_X_MOBILE_PX = 120;
+
+// TYPING EFFECT
+type ProfileSuffix = {
+  text: string;
+  highlight: boolean;
+};
+const PROFILE_TYPING_SUFFIXES: ProfileSuffix[] = [
+  { text: "s...", highlight: false },
+  { text: " experiences", highlight: true }
+];
+const PROFILE_TYPING_SPEED_MS = 60;
+const PROFILE_BACKSPACE_SPEED_MS = 30;
+const PROFILE_PAUSE_AFTER_WORD_MS = 2000;
+
+const technologies = [
+  "Unity",
+  "C#",
+  "Netcode",
+  "Azure PlayFab",
+  "Git",
+  "Python",
+  "C++",
+  "HTML / CSS",
+  "React",
+  "JavaScript",
+  "TypeScript",
+];
+
+const concepts = [
+  "PC / Mobile / Virtual Reality",
+  "UX / UI",
+  "Agile",
+  "Multiplayer",
+  "Game Design",
+  "Level Design",
+  "Prototyping",
+  "Optimization",
+];
+
+function getYoutubeHoverSrc(url: string): string {
+  const videoId: string = url.split("/").pop() ?? "";
+
+  if (videoId.length === 0) {
+    return url;
+  }
+
+  return `${url}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0`;
+}
+
+export default function GameDeveloperPortfolio() {
+
+  const [selectedGame, setSelectedGame] = useState<GameData | null>(null);
+  const [activeMobilePreview, setActiveMobilePreview] = useState<string | null>(null);
+  const [visibleSections, setVisibleSections] = useState<Record<string, boolean>>({});
+  const [profileReady, setProfileReady] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("profile");
+  const [profileSuffixIndex, setProfileSuffixIndex] = useState<number>(0);
+  const [profileTypedLength, setProfileTypedLength] = useState<number>(0);
+  const [profileDeleting, setProfileDeleting] = useState<boolean>(false);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const [headerHeight, setHeaderHeight] = useState<number>(0);
+  useLayoutEffect(() => {
+    const updateHeaderHeight = () => {
+      const nextHeight = headerRef.current?.offsetHeight ?? 0;
+      setHeaderHeight((previous) => (previous === nextHeight ? previous : nextHeight));
+    };
+
+    updateHeaderHeight();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateHeaderHeight();
+    });
+
+    if (headerRef.current) {
+      resizeObserver.observe(headerRef.current);
+    }
+
+    window.addEventListener("resize", updateHeaderHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updateHeaderHeight);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (selectedGame) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedGame]);
+
+  useEffect(() => {
+    const updateMobilePreview = () => {
+      if (window.innerWidth >= 640) {
+        setActiveMobilePreview(null);
+        return;
+      }
+
+      const cards: HTMLElement[] = Array.from(
+        document.querySelectorAll<HTMLElement>("[data-preview-card]")
+      );
+
+      if (cards.length === 0) {
+        setActiveMobilePreview(null);
+        return;
+      }
+
+      const viewportCenter: number =
+        window.innerHeight * (1 - PLAY_VIDEO_PREVIEW_MOBILE_HEIGHT_PERCENT / 100);
+      let closestId: string | null = null;
+      let closestDistance: number = Number.POSITIVE_INFINITY;
+
+      cards.forEach((card) => {
+        const rect: DOMRect = card.getBoundingClientRect();
+        const cardCenter: number = rect.top + rect.height * 0.5;
+        const distance: number = Math.abs(cardCenter - viewportCenter);
+        const isVisible: boolean = rect.bottom > 80 && rect.top < window.innerHeight - 80;
+
+        if (isVisible && distance < closestDistance) {
+          closestDistance = distance;
+          closestId = card.dataset.previewCard ?? null;
+        }
+      });
+
+      if (closestDistance > 180) {
+        setActiveMobilePreview(null);
+        return;
+      }
+
+      setActiveMobilePreview((previous) => (previous === closestId ? previous : closestId));
+    };
+
+    updateMobilePreview();
+
+    window.addEventListener("scroll", updateMobilePreview, { passive: true });
+    window.addEventListener("resize", updateMobilePreview);
+
+    return () => {
+      window.removeEventListener("scroll", updateMobilePreview);
+      window.removeEventListener("resize", updateMobilePreview);
+    };
+  }, []);
+
+  useEffect(() => {
+    const timeoutId: number = window.setTimeout(() => {
+      setProfileReady(true);
+    }, 120);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
+
+  useEffect(() => {
+    const currentWord: string = PROFILE_TYPING_SUFFIXES[profileSuffixIndex].text;
+
+    let timeoutId: number;
+
+    if (!profileDeleting) {
+      if (profileTypedLength < currentWord.length) {
+        timeoutId = window.setTimeout(() => {
+          setProfileTypedLength((v) => v + 1);
+        }, PROFILE_TYPING_SPEED_MS);
+      } else {
+        timeoutId = window.setTimeout(() => {
+          setProfileDeleting(true);
+        }, PROFILE_PAUSE_AFTER_WORD_MS);
+      }
+    } else {
+      if (profileTypedLength > 0) {
+        timeoutId = window.setTimeout(() => {
+          setProfileTypedLength((v) => v - 1);
+        }, PROFILE_BACKSPACE_SPEED_MS);
+      } else {
+        setProfileDeleting(false);
+        setProfileSuffixIndex((i) => (i + 1) % PROFILE_TYPING_SUFFIXES.length);
+      }
+    }
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [profileTypedLength, profileDeleting, profileSuffixIndex]);
+
+
+  useEffect(() => {
+    const sectionIds: string[] = ["games", "skills", "contact"];
+
+    const observer: IntersectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id: string = entry.target.id;
+
+            setVisibleSections((previous) => {
+              if (previous[id]) {
+                return previous;
+              }
+
+              return { ...previous, [id]: true };
+            });
+
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.01,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
+
+    sectionIds.forEach((id) => {
+      const element: HTMLElement | null = document.getElementById(id);
+
+      if (!element) {
+        return;
+      }
+
+      const rect: DOMRect = element.getBoundingClientRect();
+      const alreadyVisible: boolean = rect.top < window.innerHeight * 0.9;
+
+      if (alreadyVisible) {
+        setVisibleSections((previous) => ({ ...previous, [id]: true }));
+        return;
+      }
+
+      observer.observe(element);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const sectionIds: string[] = ["profile", "games", "skills", "contact"];
+
+    const updateActiveSection = () => {
+      const viewportHeight: number = window.innerHeight;
+      let bestSection: string = "profile";
+      let bestVisibleRatio: number = 0;
+
+      sectionIds.forEach((id) => {
+        const element: HTMLElement | null = document.getElementById(id);
+
+        if (!element) {
+          return;
+        }
+
+        const rect: DOMRect = element.getBoundingClientRect();
+        const visibleTop: number = Math.max(rect.top, 0);
+        const visibleBottom: number = Math.min(rect.bottom, viewportHeight);
+        const visibleHeight: number = Math.max(0, visibleBottom - visibleTop);
+        const visibleRatio: number = visibleHeight / viewportHeight;
+
+        if (visibleRatio > bestVisibleRatio) {
+          bestVisibleRatio = visibleRatio;
+          bestSection = id;
+        }
+      });
+
+      if (bestVisibleRatio >= 0.51) {
+        setActiveSection((previous) => (previous === bestSection ? previous : bestSection));
+        return;
+      }
+
+      setActiveSection((previous) => (previous === bestSection ? previous : bestSection));
+    };
+
+    updateActiveSection();
+
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
+
+    return () => {
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
+    };
+  }, []);
+
+  const scrollTo = (id: string) => {
+    const element: HTMLElement | null = document.getElementById(id);
+
+    if (!element) {
+      return;
+    }
+
+    const elementTop: number = element.getBoundingClientRect().top + window.scrollY;
+    const targetTop: number = Math.max(0, elementTop - headerHeight);
+
+    window.scrollTo({
+      top: targetTop,
+      behavior: "smooth"
+    });
+  };
+
+  return (
+      <div className="min-h-screen overflow-x-hidden bg-[#060814] text-zinc-100 selection:bg-violet-300/30 selection:text-white">
+        <header
+          ref={headerRef}
+          className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-md transition-all duration-500"
+          style={{
+            backgroundColor: `rgba(6,8,20,${HEADER_OPACITY_BLUR_PERCENT / 100})`
+          }}
+        >
+          <div className={`mx-auto flex max-w-7xl flex-col items-start gap-3 px-6 ${HEADER_VERTICAL_PADDING} md:flex-row md:items-center md:justify-between lg:px-8`}>
+            <div>
+              <div className="flex items-baseline gap-2 md:hidden">
+                <h1 className="text-xl font-semibold tracking-tight">JNeto</h1>
+                <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-400">
+                  Game Developer Portfolio
+                </p>
+              </div>
+
+              <div className="hidden md:block">
+                <p className="text-xs uppercase tracking-[0.28em] text-zinc-400">
+                  Game Developer Portfolio
+                </p>
+                <h1 className="text-xl font-semibold tracking-tight">JNeto (João Neto)</h1>
+              </div>
+            </div>
+
+            <nav className="flex flex-wrap gap-4 text-sm text-zinc-300 md:gap-6">
+              <button
+                type="button"
+                onClick={() => scrollTo("profile")}
+                className={`flex flex-col items-center leading-none transition ${activeSection === "profile" ? "text-violet-300" : "hover:text-white"}`}
+              >
+                <div className={`h-[2px] w-5 rounded bg-violet-300 transition-opacity ${activeSection === "profile" ? "opacity-100" : "opacity-0"}`} />
+                <span className="mt-[3px]">Profile</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollTo("games")}
+                className={`flex flex-col items-center leading-none transition ${activeSection === "games" ? "text-violet-300" : "hover:text-white"}`}
+              >
+                <div className={`h-[2px] w-5 rounded bg-violet-300 transition-opacity ${activeSection === "games" ? "opacity-100" : "opacity-0"}`} />
+                <span className="mt-[3px]">Games</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollTo("skills")}
+                className={`flex flex-col items-center leading-none transition ${activeSection === "skills" ? "text-violet-300" : "hover:text-white"}`}
+              >
+                <div className={`h-[2px] w-5 rounded bg-violet-300 transition-opacity ${activeSection === "skills" ? "opacity-100" : "opacity-0"}`} />
+                <span className="mt-[3px]">Skills</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollTo("contact")}
+                className={`flex flex-col items-center leading-none transition ${activeSection === "contact" ? "text-violet-300" : "hover:text-white"}`}
+              >
+                <div className={`h-[2px] w-5 rounded bg-violet-300 transition-opacity ${activeSection === "contact" ? "opacity-100" : "opacity-0"}`} />
+                <span className="mt-[3px]">Contact</span>
+              </button>
+            </nav>
+          </div>
+        </header>
+
+        <main style={{ paddingTop: headerHeight }}>
+          <section
+              id="profile"
+              className="border-b border-white/5 bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.16),_rgba(30,41,59,0.08),_transparent_60%),linear-gradient(180deg,_#060814_0%,_#0b1020_55%,_#0a0d18_100%)]"
+          >
+            <div
+              className={`mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
+            >
+              <div
+                className={`transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${profileReady ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
+              >
+                <p className="mb-4 text-sm uppercase tracking-[0.3em] text-zinc-300">
+                  <span className="text-violet-300">Developer</span> •{" "}
+                  <span className="text-violet-300">Designer</span> •{" "}
+                  <span className="text-violet-300">Maker</span>
+                </p>
+
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <h2 className="max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+                    Gameplay-focused developer building responsive systems for game
+                    <span
+                      className={
+                        PROFILE_TYPING_SUFFIXES[profileSuffixIndex].highlight
+                          ? "bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent"
+                          : ""
+                      }
+                    >
+                      {PROFILE_TYPING_SUFFIXES[profileSuffixIndex].text.slice(0, profileTypedLength)}
+                    </span>
+                    <span className="typing-caret"></span>
+                  </h2>
+
+                  <div className="relative shrink-0">
+                    <div
+                      className="controller-clipart pointer-events-none absolute top-1/2 z-10 -translate-y-1/2 -rotate-[18deg] drop-shadow-[0_10px_20px_rgba(0,0,0,0.45)]"
+                      style={{
+                        width: CONTROLLER_CLIPART_SIZE_PX,
+                        ["--controller-left-desktop" as string]: `${CONTROLLER_CLIPART_OFFSET_X_DESKTOP_PX}px`,
+                        ["--controller-left-mobile" as string]: `${CONTROLLER_CLIPART_OFFSET_X_MOBILE_PX}px`
+                      } as React.CSSProperties}
+                    >
+                      <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-auto w-full">
+                        <path d="M24 50C27 39 37 32 49 32H79C91 32 101 39 104 50L110 73C114 88 103 102 88 102C80 102 73 98 69 92L66 88C64.8 86.5 63.2 86.5 62 88L59 92C55 98 48 102 40 102C25 102 14 88 18 73L24 50Z" fill="#F4F5F7"/>
+                        <path d="M24 50C27 39 37 32 49 32H79C91 32 101 39 104 50L110 73C114 88 103 102 88 102C80 102 73 98 69 92L66 88C64.8 86.5 63.2 86.5 62 88L59 92C55 98 48 102 40 102C25 102 14 88 18 73L24 50Z" stroke="#D7D9E0" strokeWidth="4"/>
+                        <rect x="33" y="56" width="22" height="8" rx="3" fill="#5B5F6B"/>
+                        <rect x="40" y="49" width="8" height="22" rx="3" fill="#5B5F6B"/>
+                        <circle cx="86" cy="56" r="6" fill="#A855F7"/>
+                        <circle cx="98" cy="66" r="6" fill="#818CF8"/>
+                        <circle cx="80" cy="70" r="5" fill="#D1D5DB"/>
+                        <circle cx="91" cy="79" r="5" fill="#D1D5DB"/>
+                        <circle cx="53" cy="80" r="8" fill="#2C3140"/>
+                        <circle cx="75" cy="80" r="8" fill="#2C3140"/>
+                      </svg>
+                    </div>
+                    <div className="absolute inset-0 scale-150 rounded-xl bg-[radial-gradient(circle_at_center,_rgba(168,85,247,0.55)_0%,_rgba(139,92,246,0.38)_30%,_rgba(99,102,241,0.22)_55%,_rgba(6,8,20,0)_75%)] opacity-80 blur-2xl mix-blend-screen"></div>
+                    <img
+                        src="/profile.png"
+                        alt="Profile"
+                        className="relative h-28 w-40 rounded-xl object-cover [object-position:50%_12%] sm:h-48 sm:w-32 sm:[object-position:50%_50%]"
+                    />
+                  </div>
+                </div>
+
+                <p className="mt-6 max-w-3xl text-base leading-7 text-zinc-300 sm:text-lg">
+                  I’m JNeto, a developer and designer working across gameplay programming, encounter design,
+                  UI direction, and rapid iteration.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-4">
+                  <button
+                      type="button"
+                      onClick={() => scrollTo("games")}
+                      className="inline-flex rounded-2xl bg-zinc-100 px-5 py-3 text-sm font-medium text-[#0a0d18] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:bg-white active:scale-[0.99]"
+                  >
+                    View Games
+                  </button>
+
+                  <button
+                      type="button"
+                      onClick={() => scrollTo("contact")}
+                      className="inline-flex rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-zinc-100 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:bg-white/10 active:scale-[0.99]"
+                  >
+                    Get in Touch
+                  </button>
+                </div>
+
+                <div className="mt-10 grid gap-6 md:grid-cols-2">
+                  <div className="rounded-[28px] border border-zinc-800 bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.05] hover:shadow-xl hover:shadow-black/20">
+                    <p className="text-sm text-zinc-400">Focus</p>
+                    <h3 className="mt-2 text-xl font-semibold">Gameplay systems</h3>
+                    <p className="mt-3 text-sm leading-6 text-zinc-300">
+                      Combat feel, modular architecture, animation logic, and encounter pacing.
+                    </p>
+                  </div>
+
+                  <div className="rounded-[28px] border border-zinc-800 bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.05] hover:shadow-xl hover:shadow-black/20">
+                    <p className="text-sm text-zinc-400">Availability</p>
+                    <h3 className="mt-2 text-xl font-semibold">Freelance & studio roles</h3>
+                    <p className="mt-3 text-sm leading-6 text-zinc-300">
+                      Available for remote or on-site roles in gameplay programming and systems design.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="games" className="border-t border-white/5 bg-[#070b16]">
+            <div
+              className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
+            >
+              <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:inset-x-8"></div>
+              <div
+                className={`mb-10 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.games ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
+              >
+                <div>
+                  <p className="text-sm uppercase tracking-[0.28em] text-violet-300">Games</p>
+                  <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+                    Project showcase
+                  </h2>
+                </div>
+              </div>
+
+              <div
+                className={`grid gap-6 sm:grid-cols-2 xl:grid-cols-3 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.games ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
+              >
+                {games.map((game) => (
+                    <article
+                        key={game.title}
+                        data-preview-card={game.title}
+                        onClick={() => setSelectedGame(game)}
+                        className="group cursor-pointer overflow-hidden rounded-[28px] border border-zinc-800 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-white/15 hover:bg-white/[0.05] hover:shadow-black/35 will-change-transform"
+                    >
+                      <div className="relative aspect-[15/8.5] overflow-hidden">
+                        <img
+                            src={game.image}
+                            alt={game.title}
+                            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+                                game.video || game.youtube
+                                    ? activeMobilePreview === game.title
+                                        ? "opacity-0 sm:opacity-100 sm:group-hover:opacity-0"
+                                        : "opacity-100 sm:group-hover:opacity-0"
+                                    : "opacity-100"
+                            }`}
+                        />
+
+                        {game.video ? (
+                            <video
+                                src={game.video}
+                                autoPlay
+                                muted
+                                loop
+                                playsInline
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                                className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+                                    activeMobilePreview === game.title
+                                        ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                                        : "opacity-0 sm:group-hover:opacity-100"
+                                }`}
+                            />
+                        ) : game.youtube ? (
+                            <iframe
+                                src={getYoutubeHoverSrc(game.youtube)}
+                                title={`${game.title} preview`}
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                                allowFullScreen
+                                className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-300 ${
+                                    activeMobilePreview === game.title
+                                        ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                                        : "opacity-0 sm:group-hover:opacity-100"
+                                }`}
+                            />
+                        ) : null}
+                      </div>
+
+                      <div className="p-5">
+                        <h3 className="text-2xl font-semibold tracking-tight">{game.title}</h3>
+                        <p className="mt-1 text-sm text-zinc-400">
+                          {game.genre} • {game.platform} • {game.year}
+                        </p>
+                        <p className="mt-3 text-sm leading-6 text-zinc-300">{game.description}</p>
+
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {game.tags.map((tag: string) => (
+                              <span
+                                  key={tag}
+                                  className="rounded-full border border-white/5 bg-white/[0.04] px-3 py-1 text-xs text-zinc-300"
+                              >
+                          {tag}
+                        </span>
+                          ))}
+                        </div>
+
+                        <button
+                            type="button"
+                            className="mt-4 text-sm font-medium text-violet-300 transition-all duration-300 group-hover:translate-x-1 hover:text-violet-200"
+                        >
+                          View details
+                        </button>
+                      </div>
+                    </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section id="skills" className="border-t border-white/5 bg-[#080d19]">
+            <div
+              className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
+            >
+              <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:inset-x-8"></div>
+              <div
+                className={`mb-10 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.skills ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
+              >
+                <p className="text-sm uppercase tracking-[0.28em] text-violet-300">Skills</p>
+                <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Tools and strengths
+                </h2>
+              </div>
+
+              <div
+                className={`grid gap-6 md:grid-cols-2 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.skills ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
+              >
+                <div className="rounded-[32px] border border-zinc-800 bg-white/[0.03] p-8 transition-all duration-300 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-black/20">
+                  <p className="mb-4 text-sm uppercase tracking-[0.22em] text-zinc-400">Technologies</p>
+                  <div className="flex flex-wrap gap-3">
+                    {technologies.map((technology) => (
+                      <span
+                        key={technology}
+                        className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-zinc-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.08]"
+                      >
+                        {technology}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-[32px] border border-zinc-800 bg-white/[0.03] p-8 transition-all duration-300 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-black/20">
+                  <p className="mb-4 text-sm uppercase tracking-[0.22em] text-zinc-400">Concepts</p>
+                  <div className="flex flex-wrap gap-3">
+                    {concepts.map((concept) => (
+                      <span
+                        key={concept}
+                        className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-zinc-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.08]"
+                      >
+                        {concept}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="contact" className="border-t border-white/10 bg-[#070b16]">
+            <div
+              className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
+            >
+              <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:inset-x-8"></div>
+              <div
+                className={`mb-10 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.contact ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
+              >
+                <p className="text-sm uppercase tracking-[0.28em] text-violet-300">Contact</p>
+                <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Let’s build something worth playing
+                </h2>
+              </div>
+
+              <div
+                className={`rounded-[32px] border border-zinc-800 bg-gradient-to-br from-white/[0.05] via-[#0b1020] to-[#0a0d18] p-8 transition-all duration-300 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-black/20 sm:p-10 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.contact ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
+              >
+                <div className="max-w-2xl space-y-1 text-sm leading-7 text-zinc-300">
+                  <p>
+                    <span className="text-violet-300">Email:</span> jneto.developer@gmail.com
+                  </p>
+                  <p>
+                    <span className="text-violet-300">Phone:</span> +351 932109299
+                  </p>
+                  <p>
+                    <span className="text-violet-300">Location:</span> Lisbon, Portugal
+                  </p>
+                  <p>
+                    <span className="text-violet-300">LinkedIn:</span>{" "}
+                    <a
+                        href="https://linkedin.com/in/jnetodev"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-zinc-300 transition hover:text-white"
+                    >
+                      linkedin.com/in/jnetodev
+                    </a>
+                  </p>
+                  <p>
+                    <span className="text-violet-300">Itch.io:</span>{" "}
+                    <a
+                        href="https://lordjneto.itch.io"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-zinc-300 transition hover:text-white"
+                    >
+                      lordjneto.itch.io
+                    </a>
+                  </p>
+                </div>
+
+                <div className="mt-8 flex flex-wrap gap-4">
+                  <a
+                      href="mailto:jneto.developer@gmail.com"
+                      className="inline-flex rounded-2xl bg-zinc-100 px-5 py-3 text-sm font-medium text-[#0a0d18] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:bg-white active:scale-[0.99]"
+                  >
+                    Email Me
+                  </a>
+                  <a
+                      href="/Joao-Neto-Resume-CV-Gamedev.pdf"
+                      download="Joao-Neto-Resume-CV-Gamedev.pdf"
+                      className="inline-flex rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-zinc-100 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:bg-white/10 active:scale-[0.99]"
+                  >
+                    Download CV
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {selectedGame && (
+              <div
+                  onClick={() => setSelectedGame(null)}
+                  className="fixed inset-0 z-[100] flex items-center justify-center overflow-x-hidden bg-black/85 px-6 py-10 animate-[fadeIn_.2s_ease-out]"
+              >
+                <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="relative max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-[32px] border border-white/10 bg-[#0a0d18] shadow-2xl shadow-black/50 animate-[modalIn_.25s_ease-out]"
+                >
+                  <button
+                      type="button"
+                      onClick={() => setSelectedGame(null)}
+                      className="absolute right-4 top-4 z-10 rounded-xl bg-gradient-to-r from-red-500 via-rose-500 to-pink-500 px-3 py-2 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:opacity-90 active:scale-[0.99]"
+                  >
+                    Close
+                  </button>
+
+                  <div className="max-h-[90vh] overflow-y-auto">
+                    <div className="aspect-[16/6] overflow-hidden">
+                      {selectedGame.video ? (
+                          <video
+                              src={selectedGame.video}
+                              autoPlay
+                              muted
+                              loop
+                              playsInline
+                              className="h-full w-full object-cover"
+                          />
+                      ) : selectedGame.youtube ? (
+                          <iframe
+                              src={selectedGame.youtube}
+                              title={selectedGame.title}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              referrerPolicy="strict-origin-when-cross-origin"
+                              allowFullScreen
+                              className="h-full w-full"
+                          />
+                      ) : (
+                          <img
+                              src={selectedGame.image}
+                              alt={selectedGame.title}
+                              className="h-full w-full object-cover"
+                          />
+                      )}
+                    </div>
+
+                    <div className="p-8">
+                      <h3 className="text-3xl font-semibold tracking-tight">{selectedGame.title}</h3>
+                      <p className="mt-2 text-sm text-zinc-400">
+                        {selectedGame.genre} • {selectedGame.platform} • {selectedGame.year}
+                      </p>
+
+                      <p className="mt-5 max-w-5xl text-base leading-7 text-zinc-300">
+                        {selectedGame.fullDescription}
+                      </p>
+
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {selectedGame.tags.map((tag: string) => (
+                            <span
+                                key={tag}
+                                className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-zinc-300"
+                            >
+                        {tag}
+                      </span>
+                        ))}
+                      </div>
+
+                      <a
+                          href={selectedGame.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-6 inline-flex rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 px-5 py-3 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:brightness-110 active:scale-[0.98]"
+                      >
+                        {selectedGame.cta}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          )}
+        </main>
+
+        <footer className="border-t border-white/10 bg-[#060814]">
+          <div className={`mx-auto flex max-w-7xl flex-col gap-4 px-6 ${FOOTER_VERTICAL_PADDING} text-sm text-zinc-400 lg:flex-row lg:items-center lg:justify-between lg:px-8`}>
+            <p>© {new Date().getFullYear()} JNeto (Joao Neto). All rights reserved.</p>
+          </div>
+        </footer>
+
+        <style>{`
+        .controller-clipart {
+          left: var(--controller-left-desktop);
+        }
+
+        @media (max-width: 639px) {
+          .controller-clipart {
+            left: var(--controller-left-mobile);
+          }
+        }
+
+        .typing-caret {
+          display: inline-block;
+          width: 2px;
+          height: 0.9em;
+          margin-left: 6px;
+          background: linear-gradient(180deg, #a855f7, #6366f1);
+          animation: caretBlink 1s steps(1) infinite;
+          vertical-align: baseline;
+        }
+
+        @keyframes caretBlink {
+          0%, 50%, 100% { opacity: 1; }
+          25%, 75% { opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes modalIn {
+          from {
+            opacity: 0;
+            transform: translateY(12px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
+      </div>
+  );
+}
