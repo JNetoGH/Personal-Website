@@ -604,7 +604,7 @@ export default function GameDeveloperPortfolio() {
                             {renderPlatformIcon(game.platform)}
                           </div>
                           <span
-                            className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur-sm ${
+                            className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium ${
                               game.status === "Published"
                                 ? "border-emerald-400/30 bg-emerald-500/20 text-emerald-300"
                                 : game.status === "In Development"
@@ -817,7 +817,7 @@ export default function GameDeveloperPortfolio() {
                           {renderPlatformIcon(selectedGame.platform)}
                         </div>
                         <span
-                          className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur-sm ${
+                          className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium ${
                             selectedGame.status === "Published"
                               ? "border-emerald-400/30 bg-emerald-500/20 text-emerald-300"
                               : selectedGame.status === "In Development"
