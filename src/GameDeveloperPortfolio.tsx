@@ -15,6 +15,8 @@ const CONTROLLER_CLIPART_SIZE_PX = 100;
 const CONTROLLER_CLIPART_OFFSET_X_DESKTOP_PX = -80;
 const CONTROLLER_CLIPART_OFFSET_X_MOBILE_PX = 120;
 
+const MOBILE_VISIBLE_GAMES_COUNT: number = 4;
+
 // TYPING EFFECT
 type ProfileSuffix = {
   text: string;
@@ -107,7 +109,9 @@ export default function GameDeveloperPortfolio() {
   const [profileSuffixIndex, setProfileSuffixIndex] = useState<number>(0);
   const [profileTypedLength, setProfileTypedLength] = useState<number>(0);
   const [profileDeleting, setProfileDeleting] = useState<boolean>(false);
+  const [showAllGamesMobile, setShowAllGamesMobile] = useState<boolean>(false);
   const headerRef = useRef<HTMLElement | null>(null);
+  const gameCardRefs = useRef<Array<HTMLElement | null>>([]);
   const [headerHeight, setHeaderHeight] = useState<number>(0);
   useLayoutEffect(() => {
     const updateHeaderHeight = () => {
@@ -353,6 +357,36 @@ export default function GameDeveloperPortfolio() {
     });
   };
 
+  const MOBILE_COLLAPSE_SCROLL_INDEX: number = MOBILE_VISIBLE_GAMES_COUNT - 1;
+  const visibleGames: GameData[] = showAllGamesMobile || window.innerWidth >= 640
+    ? games
+    : games.slice(0, MOBILE_VISIBLE_GAMES_COUNT);
+
+  const handleToggleGamesMobile = () => {
+    if (showAllGamesMobile) {
+      const targetCard = gameCardRefs.current[MOBILE_COLLAPSE_SCROLL_INDEX];
+
+      setShowAllGamesMobile(false);
+
+      window.setTimeout(() => {
+        if (!targetCard) {
+          return;
+        }
+
+        const targetTop = targetCard.getBoundingClientRect().top + window.scrollY - headerHeight - 16;
+
+        window.scrollTo({
+          top: Math.max(0, targetTop),
+          behavior: "smooth"
+        });
+      }, 50);
+
+      return;
+    }
+
+    setShowAllGamesMobile(true);
+  };
+
   return (
       <div className="min-h-screen overflow-x-hidden bg-[#060814] text-zinc-100 selection:bg-violet-300/30 selection:text-white">
         <header
@@ -541,13 +575,17 @@ export default function GameDeveloperPortfolio() {
                 </div>
               </div>
 
-              <div
-                className={`grid gap-6 sm:grid-cols-2 xl:grid-cols-3 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.games ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
-                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
-              >
-                {games.map((game) => (
+              <div className="relative">
+                <div
+                  className={`grid gap-6 sm:grid-cols-2 xl:grid-cols-3 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.games ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                  style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
+                >
+                {visibleGames.map((game) => (
                     <article
                         key={game.title}
+                        ref={(element) => {
+                          gameCardRefs.current[games.findIndex((item) => item.title === game.title)] = element;
+                        }}
                         data-preview-card={game.title}
                         onClick={() => setSelectedGame(game)}
                         className="group cursor-pointer overflow-hidden rounded-[28px] border border-zinc-800 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-white/15 hover:bg-white/[0.05] hover:shadow-black/35 will-change-transform"
@@ -634,6 +672,35 @@ export default function GameDeveloperPortfolio() {
                       </div>
                     </article>
                 ))}
+                </div>
+
+                {!showAllGamesMobile && games.length > MOBILE_VISIBLE_GAMES_COUNT && (
+                  <div className="pointer-events-none absolute inset-x-0 bottom-16 h-24 bg-gradient-to-b from-transparent via-[#070b16]/85 to-[#070b16] sm:hidden"></div>
+                )}
+
+                {games.length > MOBILE_VISIBLE_GAMES_COUNT && (
+                  <div className="mt-6 flex justify-center sm:hidden">
+                    <button
+                      type="button"
+                      onClick={handleToggleGamesMobile}
+                      className={`inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-medium text-white transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.99] ${
+                        showAllGamesMobile
+                          ? "bg-gradient-to-r from-rose-500 via-red-500 to-orange-500"
+                          : "bg-gradient-to-r from-fuchsia-500 via-violet-500 to-indigo-500"
+                      }`}
+                    >
+                      {showAllGamesMobile ? "Show less" : "See more"}
+                      <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        className={`games-toggle-chevron h-4 w-4 transition-transform duration-300 ${showAllGamesMobile ? "rotate-180" : "rotate-0"}`}                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </section>
@@ -913,6 +980,19 @@ export default function GameDeveloperPortfolio() {
           to {
             opacity: 1;
             transform: translateY(0) scale(1);
+          }
+        }
+        
+        .games-toggle-chevron {
+          animation: gamesChevronFloat 1.4s ease-in-out infinite;
+        }
+        
+        @keyframes gamesChevronFloat {
+          0%, 100% {
+            translate: 0 0;
+          }
+          50% {
+            translate: 0 3px;
           }
         }
       `}</style>
