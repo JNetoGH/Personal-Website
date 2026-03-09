@@ -14,6 +14,9 @@ export type GameData = {
     youtube?: string;
 };
 
+// defaults
+// image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80",
+// video: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
 export const games: GameData[] = [
     {
         title: "Indigo Force",
@@ -66,8 +69,8 @@ export const games: GameData[] = [
         description: "Mobile fishing game built around timing, progression, and escalating difficulty.",
         fullDescription: "Arcade-style fishing game focused on timing mechanics and progressive difficulty, where players unlock new challenges and improve efficiency across runs.",
         tags: ["Timing Mechanics", "Progression", "Arcade"],
-        image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80",
-        video: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        image: "/thumbnails/fish-and-hooks-thumbnail.png",
+        youtube: "https://www.youtube.com/embed/vRhzqWo0sbk",
         cta: "Play",
         link: "https://lordjneto.itch.io/fish-and-hooks",
     },
