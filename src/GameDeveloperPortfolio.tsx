@@ -778,10 +778,7 @@ export default function GameDeveloperPortfolio() {
               className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
             >
               <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:inset-x-8"></div>
-              <div
-                className={`mb-10 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.games ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
-                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
-              >
+              <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div>
                   <p className="text-sm uppercase tracking-[0.28em] text-violet-300">Games</p>
                   <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -791,10 +788,7 @@ export default function GameDeveloperPortfolio() {
               </div>
 
               <div className="relative">
-                <div
-                  className={`grid gap-6 sm:grid-cols-2 lg:grid-cols-3 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.games ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
-                  style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
-                >
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {visibleGames.map((game) => {
                     const isGameFocused: boolean = activeMobilePreview === game.title;
                     const isGameBannerActive: boolean = isGameFocused || hoveredGameCardTitle === game.title;
@@ -951,20 +945,14 @@ export default function GameDeveloperPortfolio() {
               className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
             >
               <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:inset-x-8"></div>
-              <div
-                className={`mb-10 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.skills ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
-                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
-              >
+              <div className="mb-10">
                 <p className="text-sm uppercase tracking-[0.28em] text-violet-300">Skills</p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
                   Tools and strengths
                 </h2>
               </div>
 
-              <div
-                className={`grid gap-6 md:grid-cols-2 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.skills ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
-                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
-              >
+              <div className="grid gap-6 md:grid-cols-2">
                 <div className="rounded-[32px] border border-zinc-800 bg-white/[0.03] p-8 transition-all duration-300 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-black/20">
                   <div className="relative z-10">
                     <div className="mb-5">
@@ -1013,20 +1001,14 @@ export default function GameDeveloperPortfolio() {
               className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
             >
               <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:inset-x-8"></div>
-              <div
-                className={`mb-10 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.contact ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
-                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
-              >
+              <div className="mb-10">
                 <p className="text-sm uppercase tracking-[0.28em] text-violet-300">Contact</p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
                   Let’s build something worth playing
                 </h2>
               </div>
 
-              <div
-                className={`rounded-[32px] border border-zinc-800 bg-gradient-to-br from-white/[0.05] via-[#0b1020] to-[#0a0d18] p-8 transition-all duration-300 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-black/20 sm:p-10 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.contact ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
-                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
-              >
+              <div className="rounded-[32px] border border-zinc-800 bg-gradient-to-br from-white/[0.05] via-[#0b1020] to-[#0a0d18] p-8 transition-all duration-300 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-black/20 sm:p-10">
                 <div className="max-w-2xl space-y-1 text-sm leading-7 text-zinc-300">
                   <p>
                     <span className="text-violet-300">Email:</span> jneto.developer@gmail.com
