@@ -1015,7 +1015,7 @@ export default function GameDeveloperPortfolio() {
           {selectedGame && (
               <div
                   onClick={() => setSelectedGame(null)}
-                  className="fixed inset-0 z-[100] flex items-center justify-center overflow-x-hidden bg-black/85 px-6 py-10 animate-[fadeIn_.2s_ease-out]"
+                  className="fixed inset-0 z-[100] flex items-center justify-center overflow-x-hidden bg-black/85 px-3 py-4 sm:px-6 sm:py-10 animate-[fadeIn_.2s_ease-out]"
               >
                 <div
                     onClick={(e) => e.stopPropagation()}
@@ -1057,7 +1057,7 @@ export default function GameDeveloperPortfolio() {
                       )}
                     </div>
 
-                    <div className="p-8">
+                    <div className="p-5 sm:p-8">
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-2 min-w-0">
                           <h3 className="text-3xl font-semibold tracking-tight">{selectedGame.title}</h3>
