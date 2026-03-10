@@ -13,6 +13,7 @@ export type GameData = {
     technicalHighlights?: string[];
     tags: string[];
     image: string;
+    galleryPath: string;
     cta: string;
     link: string;
     video?: string;
@@ -47,6 +48,7 @@ export const games: GameData[] = [
         ],
         tags: ["Boss Combat", "Encounter Design", "Action"],
         image: "/thumbnails/indigo-force-thumbnail.png",
+        galleryPath: "indigo-force",
         youtube: "https://www.youtube.com/embed/Ukafi9JuWig",
         cta: "Play",
         link: "https://lordjneto.itch.io/indigo-force-boss-demo",
@@ -74,6 +76,7 @@ export const games: GameData[] = [
         ],
         tags: ["Multiplayer", "Kart Handling", "Power-ups"],
         image: "/thumbnails/mad-kart-racing-thumbnail.webp",
+        galleryPath: "mad-kart-racing",
         youtube: "https://www.youtube.com/embed/tY3SWgjkVto",
         cta: "Play",
         link: "https://play.google.com/store/apps/details?id=com.gamearound.metakartracers",
@@ -102,6 +105,7 @@ export const games: GameData[] = [
         ],
         tags: ["Wave Defense", "VR Interaction", "Combat"],
         image: "/thumbnails/trollfall-thumbnail.png",
+        galleryPath: "trollfall",
         youtube: "https://www.youtube.com/embed/CeyQQVBW4Ds",
         cta: "Play",
         link: "https://hugo-martins.itch.io/trollfall",
@@ -130,6 +134,7 @@ export const games: GameData[] = [
         ],
         tags: ["Timing Mechanics", "Progression", "Arcade"],
         image: "/thumbnails/fish-and-hooks-thumbnail.png",
+        galleryPath: "fish-and-hooks",
         youtube: "https://www.youtube.com/embed/vRhzqWo0sbk",
         cta: "Play",
         link: "https://lordjneto.itch.io/fish-and-hooks",
@@ -157,6 +162,7 @@ export const games: GameData[] = [
         ],
         tags: ["Puzzle", "Cutscenes", "Interactive"],
         image: "/thumbnails/edens-path-thumbnail.png",
+        galleryPath: "edens-path",
         youtube: "https://www.youtube.com/embed/-C2r6jgz7z0",
         cta: "Play",
         link: "https://lordjneto.itch.io/edens-path",
@@ -185,6 +191,7 @@ export const games: GameData[] = [
         ],
         tags: ["Arcade", "Enemy Waves", "Action"],
         image: "/thumbnails/bone-breaker-thumbnail.png",
+        galleryPath: "bone-breaker",
         youtube: "https://www.youtube.com/embed/6ZsHu2egLSw",
         cta: "Play",
         link: "https://sabrinasilvaart.itch.io/bone-breaker",

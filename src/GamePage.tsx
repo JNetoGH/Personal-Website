@@ -87,6 +87,15 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
     const contributions: string[] = game.contributions ?? [];
     const highlights: string[] = game.technicalHighlights ?? [];
 
+    const allGalleryImages = import.meta.glob<{ default: string }>(
+        "./assets/galleries/**/*.{png,jpg,jpeg,webp,gif}",
+        { eager: true }
+    );
+
+    const galleryImages = Object.entries(allGalleryImages)
+        .filter(([path]) => path.includes(`/galleries/${game.galleryPath}/`))
+        .map(([, module]) => module.default);
+
     return (
         <>
             <div className="min-h-screen bg-[#060814] text-zinc-100">
@@ -208,21 +217,25 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
     <section>
     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-violet-300">
         Gallery
-        </p>
+    </p>
 
+    {galleryImages.length > 0 ? (
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-    <div className="overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03]">
-    <img
-        src={game.image}
-    alt={`${game.title} main screenshot`}
-    className="aspect-[16/10] h-full w-full object-cover"
-        />
+            {galleryImages.map((img, index) => (
+                <div key={index} className="overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03]">
+                    <img
+                        src={img}
+                        alt={`${game.title} gallery screenshot ${index + 1}`}
+                        className="aspect-[16/10] h-full w-full object-cover"
+                    />
+                </div>
+            ))}
         </div>
-
-        <div className="hidden sm:flex min-h-[220px] items-center justify-center rounded-[24px] border border-dashed border-white/10 bg-white/[0.02] px-6 text-center text-sm leading-7 text-zinc-400">
-        Additional screenshots can be added here later.
-    </div>
-    </div>
+    ) : (
+        <div className="mt-4 flex min-h-[220px] items-center justify-center rounded-[24px] border border-dashed border-white/10 bg-white/[0.02] px-6 text-center text-sm leading-7 text-zinc-400">
+            Additional screenshots can be added here later.
+        </div>
+    )}
     </section>
     <section className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 lg:hidden">
     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-violet-300">
