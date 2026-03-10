@@ -101,12 +101,6 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
                         <div className="absolute inset-0 flex items-end p-6 sm:p-8 lg:p-10">
                             <div className="grid w-full gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
                                 <div className="min-w-0">
-                                    <div className="mb-3 flex items-center gap-2">
-                                        {renderPlatformIcon(game.platform)}
-                                        <span className="text-sm uppercase tracking-[0.22em] text-zinc-300">
-                                            {game.platform}
-                                        </span>
-                                    </div>
 
                                     <h1 className="max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-[3.4rem] lg:leading-[1.02]">
                                         {game.title}
@@ -155,6 +149,12 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
         >
           {game.cta}
         </a>
+        <div className="flex items-center gap-2 text-zinc-300">
+          {renderPlatformIcon(game.platform)}
+          <span className="text-sm uppercase tracking-[0.18em]">
+            {game.platform}
+          </span>
+        </div>
       </section>
     <section>
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-violet-300">
