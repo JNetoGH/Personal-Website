@@ -210,12 +210,26 @@ export default function GameDeveloperPortfolio() {
     favicon.type = "image/png";
     favicon.href = "/favicon.png";
 
+    const existingNoTranslateMeta = document.querySelector<HTMLMetaElement>('meta[name="google"][content="notranslate"]');
+    const noTranslateMeta = existingNoTranslateMeta ?? document.createElement("meta");
+
+    noTranslateMeta.setAttribute("name", "google");
+    noTranslateMeta.setAttribute("content", "notranslate");
+
+    if (!existingNoTranslateMeta) {
+      document.head.appendChild(noTranslateMeta);
+    }
+
     if (!existingFavicon) {
       document.head.appendChild(favicon);
     }
 
     return () => {
       document.title = previousTitle;
+
+      if (!existingNoTranslateMeta && noTranslateMeta.parentNode) {
+        noTranslateMeta.parentNode.removeChild(noTranslateMeta);
+      }
     };
   }, []);
 
@@ -458,7 +472,10 @@ export default function GameDeveloperPortfolio() {
   };
 
   return (
-      <div className="min-h-screen overflow-x-hidden bg-[#060814] text-zinc-100 selection:bg-violet-300/30 selection:text-white">
+      <div
+        translate="no"
+        className="notranslate min-h-screen overflow-x-hidden bg-[#060814] text-zinc-100 selection:bg-violet-300/30 selection:text-white"
+      >
         <header
           ref={headerRef}
           className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-md transition-all duration-500"
@@ -520,7 +537,7 @@ export default function GameDeveloperPortfolio() {
           </div>
         </header>
 
-        <main style={{ paddingTop: headerHeight }}>
+        <main translate="no" className="notranslate" style={{ paddingTop: headerHeight }}>
           <section
               id="profile"
               className="border-b border-white/5 bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.16),_rgba(30,41,59,0.08),_transparent_60%),linear-gradient(180deg,_#060814_0%,_#0b1020_55%,_#0a0d18_100%)]"
@@ -1023,7 +1040,7 @@ export default function GameDeveloperPortfolio() {
           )}
         </main>
 
-        <footer className="border-t border-white/10 bg-[#060814]">
+        <footer translate="no" className="notranslate border-t border-white/10 bg-[#060814]">
           <div className={`mx-auto flex max-w-7xl flex-col gap-4 px-6 ${FOOTER_VERTICAL_PADDING} text-sm text-zinc-400 lg:flex-row lg:items-center lg:justify-between lg:px-8`}>
             <p>© {new Date().getFullYear()} JNeto (Joao Neto). All rights reserved.</p>
           </div>
