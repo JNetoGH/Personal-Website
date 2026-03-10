@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { games, type GameData } from "./Games.ts";
 
 // PAGE SETTINGS
@@ -70,7 +70,38 @@ function getYoutubeHoverSrc(url: string, offset?: number): string {
   }
 
   const start = offset ?? 0;
-  return `${url}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0&start=${start}`;
+  return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0&playsinline=1&start=${start}`;
+}
+
+const YOUTUBE_IFRAME_API_SRC = "https://www.youtube.com/iframe_api";
+
+declare global {
+  interface Window {
+    YT?: {
+      Player: new (element: HTMLIFrameElement, options: {
+        events?: {
+          onReady?: (event: { target: { playVideo: () => void; pauseVideo: () => void; seekTo: (seconds: number, allowSeekAhead?: boolean) => void; mute: () => void; }; }) => void;
+        };
+      }) => {
+        playVideo: () => void;
+        pauseVideo: () => void;
+        seekTo: (seconds: number, allowSeekAhead?: boolean) => void;
+        mute: () => void;
+      };
+    };
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+function getYoutubeEmbedSrc(url: string, offset?: number): string {
+  const videoId: string = url.split("/").pop() ?? "";
+
+  if (videoId.length === 0) {
+    return url;
+  }
+
+  const start = offset ?? 0;
+  return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0&playsinline=1&start=${start}`;
 }
 
 function getYoutubeModalSrc(url: string, offset?: number): string {
@@ -147,9 +178,102 @@ export default function GameDeveloperPortfolio() {
   const [profileTypedLength, setProfileTypedLength] = useState<number>(0);
   const [profileDeleting, setProfileDeleting] = useState<boolean>(false);
   const [showAllGamesMobile, setShowAllGamesMobile] = useState<boolean>(false);
+  const [hoveredPreviewGameTitle, setHoveredPreviewGameTitle] = useState<string | null>(null);
+  const [youtubeApiReady, setYoutubeApiReady] = useState<boolean>(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const gameCardRefs = useRef<Array<HTMLElement | null>>([]);
+  const previewVideoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
+  const youtubeIframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({});
+  const youtubePlayerRefs = useRef<Record<string, { playVideo: () => void; pauseVideo: () => void; seekTo: (seconds: number, allowSeekAhead?: boolean) => void; mute: () => void; } | null>>({});
   const [headerHeight, setHeaderHeight] = useState<number>(0);
+  useEffect(() => {
+    Object.entries(previewVideoRefs.current).forEach(([title, video]) => {
+      if (!video) {
+        return;
+      }
+
+      if (hoveredPreviewGameTitle === title) {
+        video.play().catch(() => {});
+        return;
+      }
+
+      video.pause();
+    });
+
+    Object.entries(youtubePlayerRefs.current).forEach(([title, player]) => {
+      if (!player) {
+        return;
+      }
+
+      if (hoveredPreviewGameTitle === title) {
+        player.playVideo();
+        return;
+      }
+
+      player.pauseVideo();
+    });
+  }, [hoveredPreviewGameTitle]);
+
+  useEffect(() => {
+    if (window.YT?.Player) {
+      setYoutubeApiReady(true);
+      return;
+    }
+
+    const existingScript = document.querySelector<HTMLScriptElement>(`script[src="${YOUTUBE_IFRAME_API_SRC}"]`);
+
+    const previousReadyHandler = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      previousReadyHandler?.();
+      setYoutubeApiReady(true);
+    };
+
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = YOUTUBE_IFRAME_API_SRC;
+      script.async = true;
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      window.onYouTubeIframeAPIReady = previousReadyHandler;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!youtubeApiReady || !window.YT?.Player) {
+      return;
+    }
+
+    games.forEach((game) => {
+      if (!game.youtube) {
+        return;
+      }
+
+      const iframe = youtubeIframeRefs.current[game.title];
+
+      if (!iframe || youtubePlayerRefs.current[game.title]) {
+        return;
+      }
+
+      youtubePlayerRefs.current[game.title] = new window.YT.Player(iframe, {
+        events: {
+          onReady: (event) => {
+            const offset = game.videoStartOffset ?? 0;
+            event.target.mute();
+            event.target.seekTo(offset, true);
+
+            if (hoveredPreviewGameTitle === game.title) {
+              event.target.playVideo();
+              return;
+            }
+
+            event.target.pauseVideo();
+          }
+        }
+      });
+    });
+  }, [youtubeApiReady, hoveredPreviewGameTitle]);
 
   useLayoutEffect(() => {
     const updateHeaderHeight = () => {
@@ -711,7 +835,11 @@ export default function GameDeveloperPortfolio() {
                   className={`grid gap-6 sm:grid-cols-2 lg:grid-cols-3 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.games ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
                   style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
                 >
-                {visibleGames.map((game) => (
+                {visibleGames.map((game) => {
+                    const shouldShowPreview: boolean = activeMobilePreview === game.title || hoveredPreviewGameTitle === game.title;
+                    const shouldMountYoutubePreview: boolean = activeMobilePreview === game.title || youtubeApiReady;
+
+                    return (
                     <article
                         key={game.title}
                         ref={(element) => {
@@ -719,56 +847,63 @@ export default function GameDeveloperPortfolio() {
                         }}
                         data-preview-card={game.title}
                         onClick={() => setSelectedGame(game)}
+                        onMouseEnter={() => {
+                          setHoveredPreviewGameTitle(game.title);
+                        }}
+                        onMouseLeave={() => {
+                          setHoveredPreviewGameTitle((previous) => (previous === game.title ? null : previous));
+                        }}
                         className="group cursor-pointer overflow-hidden rounded-[28px] border border-zinc-800 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-white/15 hover:bg-white/[0.05] hover:shadow-black/35 will-change-transform"
                     >
                       <div className="relative isolate aspect-[15/8.45] overflow-hidden rounded-t-[28px]">
                         <img
                             src={game.image}
                             alt={game.title}
-                            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-                                game.video || game.youtube
-                                    ? activeMobilePreview === game.title
-                                        ? "opacity-0 sm:opacity-100 sm:group-hover:opacity-0"
-                                        : "opacity-100 sm:group-hover:opacity-0"
-                                    : "opacity-100"
-                            }`}
+                            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${(game.video || game.youtube) && shouldShowPreview ? "opacity-0" : "opacity-100"}`}
                         />
 
                         {game.video ? (
                             <video
+                                ref={(element) => {
+                                  previewVideoRefs.current[game.title] = element;
+                                }}
                                 src={game.video}
-                                autoPlay
                                 muted
                                 loop
                                 playsInline
+                                preload="metadata"
                                 onLoadedMetadata={(e) => {
                                   const video = e.currentTarget;
                                   const offset = game.videoStartOffset ?? 0;
                                   const targetTime = Math.min(offset, Math.max(0, video.duration - 0.1));
                                   video.currentTime = Number.isFinite(targetTime) ? targetTime : offset;
+
+                                  if (shouldShowPreview) {
+                                    video.play().catch(() => {});
+                                    return;
+                                  }
+
+                                  video.pause();
                                 }}
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";
                                 }}
-                                className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-                                    activeMobilePreview === game.title
-                                        ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
-                                        : "opacity-0 sm:group-hover:opacity-100"
-                                }`}
+                                className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${shouldShowPreview ? "opacity-100" : "opacity-0"}`}
                             />
                         ) : game.youtube ? (
-                            <iframe
-                                src={getYoutubeHoverSrc(game.youtube, game.videoStartOffset)}
-                                title={`${game.title} preview`}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerPolicy="strict-origin-when-cross-origin"
-                                allowFullScreen
-                                className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-300 ${
-                                    activeMobilePreview === game.title
-                                        ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
-                                        : "opacity-0 sm:group-hover:opacity-100"
-                                }`}
-                            />
+                            shouldMountYoutubePreview ? (
+                                <iframe
+                                    ref={(element) => {
+                                      youtubeIframeRefs.current[game.title] = element;
+                                    }}
+                                    src={getYoutubeEmbedSrc(game.youtube, game.videoStartOffset)}
+                                    title={`${game.title} preview`}
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerPolicy="strict-origin-when-cross-origin"
+                                    allowFullScreen
+                                    className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-300 ${shouldShowPreview ? "opacity-100" : "opacity-0"}`}
+                                />
+                            ) : null
                         ) : null}
                       </div>
 
@@ -808,7 +943,8 @@ export default function GameDeveloperPortfolio() {
 
                       </div>
                     </article>
-                ))}
+                    );
+                })}
                 </div>
 
                 {!showAllGamesMobile && games.length > MOBILE_VISIBLE_GAMES_COUNT && (
