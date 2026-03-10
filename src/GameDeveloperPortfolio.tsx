@@ -79,7 +79,7 @@ function getYoutubeModalSrc(url: string, offset?: number): string {
 function renderSkillStar(): React.JSX.Element {
   return (
       <span className="skill-star" aria-hidden="true">
-      <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             d="M12 3.8L14.25 8.36L19.28 9.09L15.64 12.63L16.5 17.62L12 15.25L7.5 17.62L8.36 12.63L4.72 9.09L9.75 8.36L12 3.8Z"
             fill="url(#skillStarGradient)"
@@ -1113,39 +1113,33 @@ export default function GameDeveloperPortfolio() {
 
         .skill-star {
           position: absolute;
-          top: -6px;
-          right: -6px;
+          top: -16px;
+          right: -16px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 18px;
-          height: 18px;
+          width: 44px;
+          height: 44px;
           border-radius: 999px;
           background:
-            radial-gradient(circle at center, rgba(168,85,247,0.22) 0%, rgba(168,85,247,0.14) 45%, rgba(10,13,24,0.96) 100%);
-          border: 1px solid rgba(192,132,252,0.42);
-          box-shadow:
-            0 0 0 1px rgba(168,85,247,0.18),
-            0 0 14px rgba(192,132,252,0.42),
-            inset 0 0 8px rgba(168,85,247,0.18);
+            radial-gradient(circle at center, rgba(255,255,255,0.18) 0%, rgba(192,132,252,0.22) 26%, rgba(168,85,247,0.12) 44%, rgba(168,85,247,0.05) 60%, rgba(168,85,247,0) 78%);
+          border: 0;
+          box-shadow: none;
           pointer-events: none;
-          animation: skillStarPulse 2.4s ease-in-out infinite;
-          will-change: transform, box-shadow;
+          animation: skillStarPulse 2.8s ease-in-out infinite;
+          will-change: transform, opacity, filter;
+          z-index: 2;
         }
         @keyframes skillStarPulse {
           0%, 100% {
-            transform: scale(1);
-            box-shadow:
-              0 0 0 1px rgba(168,85,247,0.18),
-              0 0 14px rgba(192,132,252,0.42),
-              inset 0 0 8px rgba(168,85,247,0.18);
+            transform: scale(0.94);
+            opacity: 0.78;
+            filter: drop-shadow(0 0 4px rgba(255,255,255,0.16)) drop-shadow(0 0 12px rgba(192,132,252,0.28));
           }
           50% {
-            transform: scale(1.12);
-            box-shadow:
-              0 0 0 1px rgba(168,85,247,0.25),
-              0 0 22px rgba(192,132,252,0.65),
-              inset 0 0 10px rgba(168,85,247,0.28);
+            transform: scale(1.1);
+            opacity: 1;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.22)) drop-shadow(0 0 18px rgba(192,132,252,0.42));
           }
         }
 
