@@ -146,12 +146,6 @@ function renderPlatformIcon(platform: string): JSX.Element | null {
   return null;
 }
 
-function getGameSlug(game: GameData): string {
-  return game.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 export default function GameDeveloperPortfolio() {
   const navigate = useNavigate();
@@ -792,7 +786,7 @@ export default function GameDeveloperPortfolio() {
                           gameCardRefs.current[games.findIndex((item) => item.title === game.title)] = element;
                         }}
                         data-preview-card={game.title}
-                        onClick={() => navigate(`/games/${getGameSlug(game)}`)}
+                        onClick={() => navigate(`/games/${game.slug}`)}
                         onMouseEnter={() => {
                           if (!isMobile) {
                             setHoveredGameCardTitle(game.title);
