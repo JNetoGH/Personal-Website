@@ -282,6 +282,76 @@ export default function GameDeveloperPortfolio() {
   }, []);
 
   useEffect(() => {
+    const head = document.head;
+    const createdNodes: HTMLElement[] = [];
+
+    const addPreconnect = (href: string) => {
+      if (document.querySelector(`link[rel="preconnect"][href="${href}"]`)) {
+        return;
+      }
+
+      const link = document.createElement("link");
+      link.rel = "preconnect";
+      link.href = href;
+      link.crossOrigin = "anonymous";
+      head.appendChild(link);
+      createdNodes.push(link);
+    };
+
+    const addDnsPrefetch = (href: string) => {
+      if (document.querySelector(`link[rel="dns-prefetch"][href="${href}"]`)) {
+        return;
+      }
+
+      const link = document.createElement("link");
+      link.rel = "dns-prefetch";
+      link.href = href;
+      head.appendChild(link);
+      createdNodes.push(link);
+    };
+
+    addPreconnect("https://www.youtube.com");
+    addPreconnect("https://www.google.com");
+    addPreconnect("https://i.ytimg.com");
+    addPreconnect("https://googleads.g.doubleclick.net");
+    addPreconnect("https://static.doubleclick.net");
+
+    addDnsPrefetch("https://www.youtube.com");
+    addDnsPrefetch("https://i.ytimg.com");
+    addDnsPrefetch("https://googleads.g.doubleclick.net");
+    addDnsPrefetch("https://static.doubleclick.net");
+
+    const previewVideos: string[] = games
+        .map((game) => game.video)
+        .filter((video): video is string => typeof video === "string" && video.length > 0)
+        .slice(0, 6);
+
+    const preloadElements: HTMLVideoElement[] = previewVideos.map((src) => {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.muted = true;
+      video.playsInline = true;
+      video.src = src;
+      video.style.display = "none";
+      document.body.appendChild(video);
+      return video;
+    });
+
+    return () => {
+      createdNodes.forEach((node) => {
+        node.parentNode?.removeChild(node);
+      });
+
+      preloadElements.forEach((video) => {
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
+        video.parentNode?.removeChild(video);
+      });
+    };
+  }, []);
+
+  useEffect(() => {
     const updateMobilePreview = () => {
       if (window.innerWidth >= 640) {
         setActiveMobilePreview(null);
