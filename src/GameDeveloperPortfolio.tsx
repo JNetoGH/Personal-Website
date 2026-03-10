@@ -1094,24 +1094,26 @@ export default function GameDeveloperPortfolio() {
                         ))}
                       </div>
 
-                      <div className="mt-6 flex flex-wrap items-center gap-4">
-                        <a
-                            href={selectedGame.link}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 px-5 py-3 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:brightness-110 active:scale-[0.98]"
-                        >
-                          {selectedGame.cta}
-                        </a>
+                      <div className="mt-6 flex justify-center">
+                        <div className="grid w-full max-w-sm grid-cols-2 gap-4">
+                          <a
+                              href={selectedGame.link}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="flex w-full justify-center rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 px-5 py-3 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:brightness-110 active:scale-[0.98]"
+                          >
+                            {selectedGame.cta}
+                          </a>
 
-                        <button
-                            type="button"
-                            onClick={() => setSelectedGame(null)}
-                            aria-label="Close modal"
-                            className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 via-rose-500 to-pink-500 px-5 py-3 text-sm font-medium text-white shadow-xl shadow-black/30 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:brightness-110 active:scale-[0.98]"
-                        >
-                          Close
-                        </button>
+                          <button
+                              type="button"
+                              onClick={() => setSelectedGame(null)}
+                              aria-label="Close modal"
+                              className="flex w-full items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 via-rose-500 to-pink-500 px-5 py-3 text-sm font-medium text-white shadow-xl shadow-black/30 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:brightness-110 active:scale-[0.98]"
+                          >
+                            Close
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
