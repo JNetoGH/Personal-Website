@@ -96,6 +96,9 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
         .filter(([path]) => path.includes(`/galleries/${game.galleryPath}/`))
         .map(([, module]) => module.default);
 
+    // Re-including the main thumbnail in the gallery list
+    const finalGalleryImages = [game.image, ...galleryImages];
+
     return (
         <>
             <div className="min-h-screen bg-[#060814] text-zinc-100">
@@ -122,7 +125,7 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
                     Portfolio
                 </span>
             </button>
-        <div className="mx-auto max-w-7xl px-0 lg:px-8 lg:py-7">
+        <div className="mx-auto max-w-7xl px-0 lg:px-8 lg:pb-7">
 
         <section className="overflow-hidden border-y border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.04)_0%,_rgba(255,255,255,0.02)_100%)] sm:rounded-[36px] sm:border sm:border-white/10 shadow-2xl shadow-black/30">
                     <div className="relative aspect-[16/7] lg:aspect-[16/4.25] overflow-hidden">
@@ -219,9 +222,9 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
         Gallery
     </p>
 
-    {galleryImages.length > 0 ? (
+    {finalGalleryImages.length > 0 ? (
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            {galleryImages.map((img, index) => (
+            {finalGalleryImages.map((img, index) => (
                 <div key={index} className="overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03]">
                     <img
                         src={img}
