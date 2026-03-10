@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { games, type GameData } from "./Games.ts";
 
 // PAGE SETTINGS
@@ -88,12 +89,6 @@ function getYoutubeHoverSrc(url: string, offset?: number): string {
   return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0&playsinline=1&start=${start}`;
 }
 
-function getYoutubeModalSrc(url: string, offset?: number): string {
-  const separator = url.includes("?") ? "&" : "?";
-  const start = offset ?? 0;
-  return `${url}${separator}start=${start}`;
-}
-
 function renderSkillStar(): React.JSX.Element {
   return (
       <span className="skill-star" aria-hidden="true">
@@ -151,9 +146,15 @@ function renderPlatformIcon(platform: string): React.JSX.Element | null {
   return null;
 }
 
-export default function GameDeveloperPortfolio() {
+function getGameSlug(game: GameData): string {
+  return game.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
-  const [selectedGame, setSelectedGame] = useState<GameData | null>(null);
+export default function GameDeveloperPortfolio() {
+  const navigate = useNavigate();
   const [activeMobilePreview, setActiveMobilePreview] = useState<string | null>(null);
   const [visibleSections, setVisibleSections] = useState<Record<string, boolean>>({});
   const [profileReady, setProfileReady] = useState(false);
@@ -199,17 +200,6 @@ export default function GameDeveloperPortfolio() {
   // Note: this is the lightweight warmup section.
   // If preview startup speed is revisited later, come back here first.
   // ==============================================
-  useEffect(() => {
-    if (selectedGame) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [selectedGame]);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -817,7 +807,7 @@ export default function GameDeveloperPortfolio() {
                           gameCardRefs.current[games.findIndex((item) => item.title === game.title)] = element;
                         }}
                         data-preview-card={game.title}
-                        onClick={() => setSelectedGame(game)}
+                        onClick={() => navigate(`/games/${getGameSlug(game)}`)}
                         onMouseEnter={() => {
                           if (window.innerWidth >= 640) {
                             setHoveredGameCardTitle(game.title);
@@ -1090,114 +1080,6 @@ export default function GameDeveloperPortfolio() {
             </div>
           </section>
 
-          {selectedGame && (
-              <div
-                  onClick={() => setSelectedGame(null)}
-                  className="fixed inset-0 z-[100] flex items-center justify-center overflow-x-hidden bg-black/85 px-3 py-4 sm:px-6 sm:py-10 animate-[fadeIn_.2s_ease-out]"
-              >
-                <div
-                    onClick={(e) => e.stopPropagation()}
-                    className="relative max-h-[90vh] w-full max-w-5xl overflow-visible rounded-[32px] border border-white/10 bg-[#0a0d18] shadow-2xl shadow-black/50 animate-[modalIn_.25s_ease-out]"
-                >
-
-                  <div className="max-h-[90vh] overflow-y-auto">
-                    <div className="aspect-[16/6] overflow-hidden">
-                      {selectedGame.video ? (
-                          <video
-                              src={selectedGame.video}
-                              autoPlay
-                              muted
-                              loop
-                              playsInline
-                              onLoadedMetadata={(e) => {
-                                const video = e.currentTarget;
-                                const offset = selectedGame.videoStartOffset ?? 0;
-                                const targetTime = Math.min(offset, Math.max(0, video.duration - 0.1));
-                                video.currentTime = Number.isFinite(targetTime) ? targetTime : offset;
-                              }}
-                              className="h-full w-full object-cover"
-                          />
-                      ) : selectedGame.youtube ? (
-                          <iframe
-                              src={getYoutubeModalSrc(selectedGame.youtube, selectedGame.videoStartOffset)}
-                              title={selectedGame.title}
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              referrerPolicy="strict-origin-when-cross-origin"
-                              allowFullScreen
-                              className="h-full w-full"
-                          />
-                      ) : (
-                          <img
-                              src={selectedGame.image}
-                              alt={selectedGame.title}
-                              className="h-full w-full object-cover"
-                          />
-                      )}
-                    </div>
-
-                    <div className="p-5 sm:p-8">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <h3 className="text-3xl font-semibold tracking-tight">{selectedGame.title}</h3>
-                          {renderPlatformIcon(selectedGame.platform)}
-                        </div>
-                        <span
-                          className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium ${
-                            selectedGame.status === "Published"
-                              ? "border-emerald-400/30 bg-emerald-500/20 text-emerald-300"
-                              : selectedGame.status === "In Development"
-                                ? "border-amber-400/30 bg-amber-500/20 text-amber-300"
-                                : "border-violet-400/30 bg-violet-500/20 text-violet-300"
-                          }`}
-                        >
-                          {selectedGame.status === "In Development" ? "In Dev" : selectedGame.status}
-                        </span>
-                      </div>
-                      <p className="mt-2 text-sm text-zinc-400">
-                        {selectedGame.genre} • {selectedGame.platform} • {selectedGame.year}
-                      </p>
-
-                      <p className="mt-5 max-w-5xl text-base leading-7 text-zinc-300">
-                        {selectedGame.fullDescription}
-                      </p>
-
-                      <div className="mt-5 flex flex-wrap gap-2">
-                        {selectedGame.tags.map((tag: string) => (
-                            <span
-                                key={tag}
-                                className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-zinc-300"
-                            >
-                        {tag}
-                      </span>
-                        ))}
-                      </div>
-
-                      <div className="mt-6 flex justify-center">
-                        <div className="grid w-full max-w-sm grid-cols-2 gap-4">
-                          <a
-                              href={selectedGame.link}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="flex w-full justify-center rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 px-5 py-3 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:brightness-110 active:scale-[0.98]"
-                          >
-                            {selectedGame.cta}
-                          </a>
-
-                          <button
-                              type="button"
-                              onClick={() => setSelectedGame(null)}
-                              aria-label="Close modal"
-                              className="flex w-full items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 via-rose-500 to-pink-500 px-5 py-3 text-sm font-medium text-white shadow-xl shadow-black/30 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:brightness-110 active:scale-[0.98]"
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          )}
         </main>
 
         <footer translate="no" className="notranslate border-t border-white/10 bg-[#060814]">
