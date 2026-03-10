@@ -18,13 +18,7 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Suspense
-        fallback={
-          <div className="min-h-screen bg-[#060814] text-zinc-100 flex items-center justify-center text-sm">
-            Loading…
-          </div>
-        }
-      >
+      <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<GameDeveloperPortfolio />} />
           <Route path="/games/:slug" element={<GamePage />} />
