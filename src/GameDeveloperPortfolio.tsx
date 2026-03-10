@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { games, type GameData } from "./Games.ts";
 
 // PAGE SETTINGS
@@ -62,6 +62,16 @@ const concepts: SkillItem[] = [
   { label: "Optimization" },
 ];
 
+function getYoutubeHoverSrc(url: string, offset?: number): string {
+  const videoId: string = url.split("/").pop() ?? "";
+
+  if (videoId.length === 0) {
+    return url;
+  }
+
+  const start = offset ?? 0;
+  return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0&playsinline=1&start=${start}`;
+}
 
 const YOUTUBE_IFRAME_API_SRC = "https://www.youtube.com/iframe_api";
 
@@ -169,7 +179,7 @@ export default function GameDeveloperPortfolio() {
   const [profileDeleting, setProfileDeleting] = useState<boolean>(false);
   const [showAllGamesMobile, setShowAllGamesMobile] = useState<boolean>(false);
   const [hoveredPreviewGameTitle, setHoveredPreviewGameTitle] = useState<string | null>(null);
-  const [youtubeApiReady, setYoutubeApiReady] = useState<boolean>(() => typeof window !== "undefined" && Boolean(window.YT?.Player));
+  const [youtubeApiReady, setYoutubeApiReady] = useState<boolean>(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const gameCardRefs = useRef<Array<HTMLElement | null>>([]);
   const previewVideoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
@@ -205,7 +215,8 @@ export default function GameDeveloperPortfolio() {
   }, [hoveredPreviewGameTitle]);
 
   useEffect(() => {
-    if (youtubeApiReady) {
+    if (window.YT?.Player) {
+      setYoutubeApiReady(true);
       return;
     }
 
@@ -230,9 +241,7 @@ export default function GameDeveloperPortfolio() {
   }, []);
 
   useEffect(() => {
-    const YouTubePlayer = window.YT?.Player;
-
-    if (!youtubeApiReady || !YouTubePlayer) {
+    if (!youtubeApiReady || !window.YT?.Player) {
       return;
     }
 
@@ -247,7 +256,7 @@ export default function GameDeveloperPortfolio() {
         return;
       }
 
-      youtubePlayerRefs.current[game.title] = new YouTubePlayer(iframe, {
+      youtubePlayerRefs.current[game.title] = new window.YT.Player(iframe, {
         events: {
           onReady: (event) => {
             const offset = game.videoStartOffset ?? 0;
