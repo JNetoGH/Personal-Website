@@ -30,28 +30,33 @@ const PROFILE_TYPING_SPEED_MS = 60;
 const PROFILE_BACKSPACE_SPEED_MS = 30;
 const PROFILE_PAUSE_AFTER_WORD_MS = 2000;
 
-const technologies = [
-  "Unity",
-  "C#",
-  "Netcode",
-  "Azure PlayFab",
-  "Python",
-  "Git",
-  "HTML / CSS",
-  "React",
-  "JavaScript",
-  "TypeScript",
+type SkillItem = {
+  label: string;
+  starred?: boolean;
+};
+
+const technologies: SkillItem[] = [
+  { label: "Unity", starred: true },
+  { label: "C#", starred: true },
+  { label: "Netcode" },
+  { label: "Azure PlayFab", starred: true },
+  { label: "Python" },
+  { label: "Git" , starred: true },
+  { label: "HTML / CSS" },
+  { label: "React" },
+  { label: "JavaScript" },
+  { label: "TypeScript" },
 ];
 
-const concepts = [
-  "PC / Mobile / Virtual Reality",
-  "UX / UI",
-  "Agile",
-  "Multiplayer",
-  "Game Design",
-  "Level Design",
-  "Prototyping",
-  "Optimization",
+const concepts: SkillItem[] = [
+  { label: "PC / Mobile / Virtual Reality", starred: true },
+  { label: "UX / UI", starred: true},
+  { label: "Agile" },
+  { label: "Multiplayer"},
+  { label: "Game Design", starred: true },
+  { label: "Level Design", starred: true },
+  { label: "Prototyping" },
+  { label: "Optimization" },
 ];
 
 function getYoutubeHoverSrc(url: string, offset?: number): string {
@@ -69,6 +74,29 @@ function getYoutubeModalSrc(url: string, offset?: number): string {
   const separator = url.includes("?") ? "&" : "?";
   const start = offset ?? 0;
   return `${url}${separator}start=${start}`;
+}
+
+function renderSkillStar(): React.JSX.Element {
+  return (
+      <span className="skill-star" aria-hidden="true">
+      <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M12 3.8L14.25 8.36L19.28 9.09L15.64 12.63L16.5 17.62L12 15.25L7.5 17.62L8.36 12.63L4.72 9.09L9.75 8.36L12 3.8Z"
+            fill="url(#skillStarGradient)"
+            stroke="rgba(255,255,255,0.9)"
+            strokeWidth="1.1"
+            strokeLinejoin="round"
+        />
+        <defs>
+          <linearGradient id="skillStarGradient" x1="6" y1="4" x2="18" y2="18" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#F5D0FE" />
+            <stop offset="0.45" stopColor="#C084FC" />
+            <stop offset="1" stopColor="#818CF8" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </span>
+  );
 }
 
 function renderPlatformIcon(platform: string): React.JSX.Element | null {
@@ -119,6 +147,7 @@ export default function GameDeveloperPortfolio() {
   const headerRef = useRef<HTMLElement | null>(null);
   const gameCardRefs = useRef<Array<HTMLElement | null>>([]);
   const [headerHeight, setHeaderHeight] = useState<number>(0);
+
   useLayoutEffect(() => {
     const updateHeaderHeight = () => {
       const nextHeight = headerRef.current?.offsetHeight ?? 0;
@@ -830,30 +859,42 @@ export default function GameDeveloperPortfolio() {
                 style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
               >
                 <div className="rounded-[32px] border border-zinc-800 bg-white/[0.03] p-8 transition-all duration-300 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-black/20">
-                  <p className="mb-4 text-sm uppercase tracking-[0.22em] text-zinc-400">Technologies</p>
-                  <div className="flex flex-wrap gap-3">
-                    {technologies.map((technology) => (
-                      <span
-                        key={technology}
-                        className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-zinc-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.08]"
-                      >
-                        {technology}
-                      </span>
-                    ))}
+                  <div className="relative z-10">
+                    <div className="mb-5">
+                      <p className="text-sm uppercase tracking-[0.22em] text-zinc-400">Technologies</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-3">
+                      {technologies.map((technology) => (
+                        <span
+                          key={technology.label}
+                          className={`skill-chip ${technology.starred ? "skill-chip-starred" : ""}`}
+                        >
+                          {technology.starred ? renderSkillStar() : null}
+                          <span className="relative z-[1]">{technology.label}</span>
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
                 <div className="rounded-[32px] border border-zinc-800 bg-white/[0.03] p-8 transition-all duration-300 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-black/20">
-                  <p className="mb-4 text-sm uppercase tracking-[0.22em] text-zinc-400">Concepts</p>
-                  <div className="flex flex-wrap gap-3">
-                    {concepts.map((concept) => (
-                      <span
-                        key={concept}
-                        className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-zinc-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.08]"
-                      >
-                        {concept}
-                      </span>
-                    ))}
+                  <div className="relative z-10">
+                    <div className="mb-5">
+                      <p className="text-sm uppercase tracking-[0.22em] text-zinc-400">Concepts</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-3">
+                      {concepts.map((concept) => (
+                        <span
+                          key={concept.label}
+                          className={`skill-chip ${concept.starred ? "skill-chip-starred" : ""}`}
+                        >
+                          {concept.starred ? renderSkillStar() : null}
+                          <span className="relative z-[1]">{concept.label}</span>
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1047,6 +1088,67 @@ export default function GameDeveloperPortfolio() {
         </footer>
 
         <style>{`
+        .skill-chip {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          border-radius: 1rem;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(255,255,255,0.04);
+          padding: 0.5rem 1rem;
+          font-size: 0.875rem;
+          color: rgb(228 228 231);
+          transition: transform 200ms ease, background 200ms ease, border-color 200ms ease;
+        }
+
+        .skill-chip:hover {
+          transform: translateY(-2px);
+          background: rgba(255,255,255,0.08);
+          border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .skill-chip-starred {
+          box-shadow: 0 0 0 1px rgba(168,85,247,0.14);
+        }
+
+        .skill-star {
+          position: absolute;
+          top: -6px;
+          right: -6px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 18px;
+          height: 18px;
+          border-radius: 999px;
+          background:
+            radial-gradient(circle at center, rgba(168,85,247,0.22) 0%, rgba(168,85,247,0.14) 45%, rgba(10,13,24,0.96) 100%);
+          border: 1px solid rgba(192,132,252,0.42);
+          box-shadow:
+            0 0 0 1px rgba(168,85,247,0.18),
+            0 0 14px rgba(192,132,252,0.42),
+            inset 0 0 8px rgba(168,85,247,0.18);
+          pointer-events: none;
+          animation: skillStarPulse 2.4s ease-in-out infinite;
+          will-change: transform, box-shadow;
+        }
+        @keyframes skillStarPulse {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow:
+              0 0 0 1px rgba(168,85,247,0.18),
+              0 0 14px rgba(192,132,252,0.42),
+              inset 0 0 8px rgba(168,85,247,0.18);
+          }
+          50% {
+            transform: scale(1.12);
+            box-shadow:
+              0 0 0 1px rgba(168,85,247,0.25),
+              0 0 22px rgba(192,132,252,0.65),
+              inset 0 0 10px rgba(168,85,247,0.28);
+          }
+        }
+
         .accent-rain-line {
           box-shadow: 0 0 18px rgba(196, 132, 252, 0.35);
           animation: accentRainFall 6.2s linear infinite;
@@ -1088,6 +1190,11 @@ export default function GameDeveloperPortfolio() {
         }
 
         @media (max-width: 639px) {
+          .skill-chip {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+          }
+
           .controller-clipart {
             left: var(--controller-left-mobile);
           }
