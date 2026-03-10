@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type JSX } from "react";
 import { useNavigate } from "react-router-dom";
 import { games, type GameData } from "./Games.ts";
 
@@ -89,7 +89,7 @@ function getYoutubeHoverSrc(url: string, offset?: number): string {
   return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0&playsinline=1&start=${start}`;
 }
 
-function renderSkillStar(): React.JSX.Element {
+function renderSkillStar(): JSX.Element {
   return (
       <span className="skill-star" aria-hidden="true">
       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -112,7 +112,7 @@ function renderSkillStar(): React.JSX.Element {
   );
 }
 
-function renderPlatformIcon(platform: string): React.JSX.Element | null {
+function renderPlatformIcon(platform: string): JSX.Element | null {
   if (platform === "PC") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -156,7 +156,6 @@ function getGameSlug(game: GameData): string {
 export default function GameDeveloperPortfolio() {
   const navigate = useNavigate();
   const [activeMobilePreview, setActiveMobilePreview] = useState<string | null>(null);
-  const [visibleSections, setVisibleSections] = useState<Record<string, boolean>>({});
   const [profileReady, setProfileReady] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("profile");
   const [profileSuffixIndex, setProfileSuffixIndex] = useState<number>(0);
@@ -445,55 +444,6 @@ export default function GameDeveloperPortfolio() {
   }, [profileTypedLength, profileDeleting, profileSuffixIndex]);
 
 
-  useEffect(() => {
-    const sectionIds: string[] = ["games", "skills", "contact"];
-
-    const observer: IntersectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id: string = entry.target.id;
-
-            setVisibleSections((previous) => {
-              if (previous[id]) {
-                return previous;
-              }
-
-              return { ...previous, [id]: true };
-            });
-
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.01,
-        rootMargin: "0px 0px -8% 0px",
-      }
-    );
-
-    sectionIds.forEach((id) => {
-      const element: HTMLElement | null = document.getElementById(id);
-
-      if (!element) {
-        return;
-      }
-
-      const rect: DOMRect = element.getBoundingClientRect();
-      const alreadyVisible: boolean = rect.top < window.innerHeight * 0.9;
-
-      if (alreadyVisible) {
-        setVisibleSections((previous) => ({ ...previous, [id]: true }));
-        return;
-      }
-
-      observer.observe(element);
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
 
   useEffect(() => {
     const sectionIds: string[] = ["profile", "games", "skills", "contact"];
@@ -705,7 +655,7 @@ export default function GameDeveloperPortfolio() {
                         width: CONTROLLER_CLIPART_SIZE_PX,
                         ["--controller-left-desktop" as string]: `${CONTROLLER_CLIPART_OFFSET_X_DESKTOP_PX}px`,
                         ["--controller-left-mobile" as string]: `${CONTROLLER_CLIPART_OFFSET_X_MOBILE_PX}px`
-                      } as React.CSSProperties}
+                      } as CSSProperties}
                     >
                       <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-auto w-full">
                         <path d="M24 50C27 39 37 32 49 32H79C91 32 101 39 104 50L110 73C114 88 103 102 88 102C80 102 73 98 69 92L66 88C64.8 86.5 63.2 86.5 62 88L59 92C55 98 48 102 40 102C25 102 14 88 18 73L24 50Z" fill="#F4F5F7"/>
@@ -792,7 +742,7 @@ export default function GameDeveloperPortfolio() {
                 {visibleGames.map((game) => {
                     const isGameFocused: boolean = activeMobilePreview === game.title;
                     const isGameBannerActive: boolean = isGameFocused || hoveredGameCardTitle === game.title;
-                    const ctaRibbonText: string = window.innerWidth < 640 ? "tap to expand" : "click to expand";
+                    const ctaRibbonText: string = window.innerWidth < 640 ? "tap to open" : "click to open";
 
                     return (
                     <article
@@ -1077,14 +1027,18 @@ export default function GameDeveloperPortfolio() {
 
         .game-card-cta-ribbon {
           position: relative;
-          z-index: 1;
+          z-index: 3;
           width: 100%;
           height: var(--game-card-cta-height);
           margin-top: calc(var(--game-card-cta-height) * -1);
           pointer-events: none;
           opacity: 0;
-          transform: translateY(100%);
-          transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
+          transform: translateY(100%) scaleY(0.96);
+          transition:
+            transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 220ms ease,
+            filter 260ms ease;
+          filter: saturate(1) brightness(1);
         }
 
         .game-card-cta-ribbon-inner {
@@ -1096,20 +1050,22 @@ export default function GameDeveloperPortfolio() {
           height: 100%;
           overflow: hidden;
           border-radius: 0;
-          border-top: 1px solid rgba(255,255,255,0.08);
-          border-bottom: 1px solid rgba(168, 85, 247, 0.28);
+          border-top: 1px solid rgba(255,255,255,0.16);
+          border-bottom: 1px solid rgba(168,85,247,0.42);
           background:
-            linear-gradient(180deg, rgba(10,13,24,0.96) 0%, rgba(11,16,32,0.98) 100%),
+            linear-gradient(180deg, rgba(19,24,44,0.92) 0%, rgba(17,22,40,0.98) 100%),
             linear-gradient(90deg,
-              rgba(168,85,247,0.28) 0%,
-              rgba(139,92,246,0.24) 35%,
-              rgba(99,102,241,0.22) 70%,
-              rgba(79,70,229,0.26) 100%
+              rgba(244,114,182,0.34) 0%,
+              rgba(168,85,247,0.38) 24%,
+              rgba(139,92,246,0.42) 48%,
+              rgba(99,102,241,0.34) 72%,
+              rgba(59,130,246,0.30) 100%
             );
           box-shadow:
-            0 8px 24px rgba(0, 0, 0, 0.24),
-            inset 0 1px 0 rgba(255,255,255,0.06),
-            inset 0 -1px 0 rgba(168,85,247,0.08);
+            0 10px 28px rgba(0, 0, 0, 0.32),
+            0 0 22px rgba(168,85,247,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.12),
+            inset 0 -1px 0 rgba(168,85,247,0.18);
         }
 
         .game-card-cta-ribbon-inner::before {
@@ -1117,24 +1073,41 @@ export default function GameDeveloperPortfolio() {
           position: absolute;
           inset: 0;
           background:
+            linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 28%, rgba(255,255,255,0) 60%),
             linear-gradient(90deg,
-              rgba(168,85,247,0.18) 0%,
-              rgba(99,102,241,0.12) 50%,
-              rgba(168,85,247,0.18) 100%
-            ),
-            linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 45%);
+              rgba(244,114,182,0.18) 0%,
+              rgba(168,85,247,0.26) 28%,
+              rgba(255,255,255,0.24) 50%,
+              rgba(99,102,241,0.20) 72%,
+              rgba(59,130,246,0.16) 100%
+            );
+          pointer-events: none;
+        }
+
+        .game-card-cta-ribbon-inner::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: -24%;
+          width: 24%;
+          background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.28) 48%, rgba(255,255,255,0) 100%);
+          opacity: 0;
+          transform: skewX(-24deg);
           pointer-events: none;
         }
 
         .game-card-cta-ribbon-text {
           position: relative;
           z-index: 1;
-          font-size: 0.9rem;
-          font-weight: 500;
-          letter-spacing: 0.01em;
-          text-transform: none;
-          color: rgba(255,255,255,0.94);
-          text-shadow: 0 1px 8px rgba(0,0,0,0.24);
+          font-size: 0.92rem;
+          font-weight: 700;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.985);
+          text-shadow:
+            0 1px 10px rgba(0,0,0,0.34),
+            0 0 18px rgba(168,85,247,0.24);
         }
 
         .game-card-body {
@@ -1146,12 +1119,34 @@ export default function GameDeveloperPortfolio() {
         .game-card-banner-active .game-card-cta-ribbon,
         .mobile-preview-active .game-card-cta-ribbon {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateY(0) scaleY(1);
+          filter: saturate(1.18) brightness(1.1);
+        }
+
+        .game-card-banner-active .game-card-cta-ribbon-inner::after,
+        .mobile-preview-active .game-card-cta-ribbon-inner::after {
+          opacity: 1;
+          animation: gameCardRibbonGloss 1.15s ease-out;
+        }
+
+        @keyframes gameCardRibbonGloss {
+          0% {
+            left: -24%;
+            opacity: 0;
+          }
+          12% {
+            opacity: 0.55;
+          }
+          100% {
+            left: 108%;
+            opacity: 0;
+          }
         }
 
         @media (max-width: 639px) {
           .game-card-cta-ribbon-text {
-            font-size: 0.82rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.02em;
           }
         }
 
