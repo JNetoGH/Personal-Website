@@ -556,7 +556,7 @@ export default function GameDeveloperPortfolio() {
                     <span
                       className={
                         PROFILE_TYPING_SUFFIXES[profileSuffixIndex].highlight
-                          ? "bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent"
+                          ? "bg-gradient-to-r from-fuchsia-400 via-violet-500 to-indigo-500 bg-[length:200%_100%] bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(168,85,247,0.55)]"
                           : ""
                       }
                     >
