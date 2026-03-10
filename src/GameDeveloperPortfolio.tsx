@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type JSX } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { games, type GameData } from "./Games.ts";
 
 // PAGE SETTINGS
@@ -65,28 +65,23 @@ const concepts: SkillItem[] = [
 
 const YOUTUBE_IFRAME_API_SRC = "https://www.youtube.com/iframe_api";
 
-type YouTubePlayerInstance = {
-  playVideo: () => void;
-  pauseVideo: () => void;
-  seekTo: (seconds: number, allowSeekAhead?: boolean) => void;
-  mute: () => void;
-};
-
-type YouTubePlayerConstructor = new (
-  element: HTMLIFrameElement,
-  options: {
-    events?: {
-      onReady?: (event: { target: YouTubePlayerInstance }) => void;
+declare global {
+  interface Window {
+    YT?: {
+      Player: new (element: HTMLIFrameElement, options: {
+        events?: {
+          onReady?: (event: { target: { playVideo: () => void; pauseVideo: () => void; seekTo: (seconds: number, allowSeekAhead?: boolean) => void; mute: () => void; }; }) => void;
+        };
+      }) => {
+        playVideo: () => void;
+        pauseVideo: () => void;
+        seekTo: (seconds: number, allowSeekAhead?: boolean) => void;
+        mute: () => void;
+      };
     };
+    onYouTubeIframeAPIReady?: () => void;
   }
-) => YouTubePlayerInstance;
-
-type YouTubeWindow = Window & {
-  YT?: {
-    Player: YouTubePlayerConstructor;
-  };
-  onYouTubeIframeAPIReady?: () => void;
-};
+}
 
 function getYoutubeEmbedSrc(url: string, offset?: number): string {
   const videoId: string = url.split("/").pop() ?? "";
@@ -105,7 +100,7 @@ function getYoutubeModalSrc(url: string, offset?: number): string {
   return `${url}${separator}start=${start}`;
 }
 
-function renderSkillStar(): JSX.Element {
+function renderSkillStar(): React.JSX.Element {
   return (
       <span className="skill-star" aria-hidden="true">
       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -128,7 +123,7 @@ function renderSkillStar(): JSX.Element {
   );
 }
 
-function renderPlatformIcon(platform: string): JSX.Element | null {
+function renderPlatformIcon(platform: string): React.JSX.Element | null {
   if (platform === "PC") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -174,19 +169,12 @@ export default function GameDeveloperPortfolio() {
   const [profileDeleting, setProfileDeleting] = useState<boolean>(false);
   const [showAllGamesMobile, setShowAllGamesMobile] = useState<boolean>(false);
   const [hoveredPreviewGameTitle, setHoveredPreviewGameTitle] = useState<string | null>(null);
-  const [youtubeApiReady, setYoutubeApiReady] = useState<boolean>(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
-
-    const youtubeWindow = window as YouTubeWindow;
-    return Boolean(youtubeWindow.YT?.Player);
-  });
+  const [youtubeApiReady, setYoutubeApiReady] = useState<boolean>(() => typeof window !== "undefined" && Boolean(window.YT?.Player));
   const headerRef = useRef<HTMLElement | null>(null);
   const gameCardRefs = useRef<Array<HTMLElement | null>>([]);
   const previewVideoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
   const youtubeIframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({});
-  const youtubePlayerRefs = useRef<Record<string, YouTubePlayerInstance | null>>({});
+  const youtubePlayerRefs = useRef<Record<string, { playVideo: () => void; pauseVideo: () => void; seekTo: (seconds: number, allowSeekAhead?: boolean) => void; mute: () => void; } | null>>({});
   const [headerHeight, setHeaderHeight] = useState<number>(0);
   useEffect(() => {
     Object.entries(previewVideoRefs.current).forEach(([title, video]) => {
@@ -221,11 +209,10 @@ export default function GameDeveloperPortfolio() {
       return;
     }
 
-    const youtubeWindow = window as YouTubeWindow;
     const existingScript = document.querySelector<HTMLScriptElement>(`script[src="${YOUTUBE_IFRAME_API_SRC}"]`);
 
-    const previousReadyHandler = youtubeWindow.onYouTubeIframeAPIReady;
-    youtubeWindow.onYouTubeIframeAPIReady = () => {
+    const previousReadyHandler = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
       previousReadyHandler?.();
       setYoutubeApiReady(true);
     };
@@ -238,13 +225,12 @@ export default function GameDeveloperPortfolio() {
     }
 
     return () => {
-      youtubeWindow.onYouTubeIframeAPIReady = previousReadyHandler;
+      window.onYouTubeIframeAPIReady = previousReadyHandler;
     };
-  }, [youtubeApiReady]);
+  }, []);
 
   useEffect(() => {
-    const youtubeWindow = window as YouTubeWindow;
-    const YouTubePlayer = youtubeWindow.YT?.Player;
+    const YouTubePlayer = window.YT?.Player;
 
     if (!youtubeApiReady || !YouTubePlayer) {
       return;
@@ -750,7 +736,7 @@ export default function GameDeveloperPortfolio() {
                         width: CONTROLLER_CLIPART_SIZE_PX,
                         ["--controller-left-desktop" as string]: `${CONTROLLER_CLIPART_OFFSET_X_DESKTOP_PX}px`,
                         ["--controller-left-mobile" as string]: `${CONTROLLER_CLIPART_OFFSET_X_MOBILE_PX}px`
-                      } as CSSProperties}
+                      } as React.CSSProperties}
                     >
                       <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-auto w-full">
                         <path d="M24 50C27 39 37 32 49 32H79C91 32 101 39 104 50L110 73C114 88 103 102 88 102C80 102 73 98 69 92L66 88C64.8 86.5 63.2 86.5 62 88L59 92C55 98 48 102 40 102C25 102 14 88 18 73L24 50Z" fill="#F4F5F7"/>
@@ -1061,7 +1047,7 @@ export default function GameDeveloperPortfolio() {
               </div>
 
               <div
-                className={`rounded-[32px] border border-zinc-800 bg-gradient-to-br from-white/[0.05] via-[#0b1020] to-[#0a0d18] p-8 duration-300 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-black/20 sm:p-10 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.contact ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                className={`rounded-[32px] border border-zinc-800 bg-gradient-to-br from-white/[0.05] via-[#0b1020] to-[#0a0d18] p-8 transition-all duration-300 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-black/20 sm:p-10 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.contact ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
                 style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
               >
                 <div className="max-w-2xl space-y-1 text-sm leading-7 text-zinc-300">
