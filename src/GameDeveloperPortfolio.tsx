@@ -742,7 +742,7 @@ export default function GameDeveloperPortfolio() {
                 {visibleGames.map((game) => {
                     const isGameFocused: boolean = activeMobilePreview === game.title;
                     const isGameBannerActive: boolean = isGameFocused || hoveredGameCardTitle === game.title;
-                    const ctaRibbonText: string = window.innerWidth < 640 ? "tap to open" : "click to open";
+                    const ctaRibbonText: string = window.innerWidth < 640 ? "tap ‎ to ‎ open" : "click ‎ to ‎  open";
 
                     return (
                     <article
