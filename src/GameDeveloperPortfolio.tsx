@@ -162,6 +162,7 @@ export default function GameDeveloperPortfolio() {
   const [profileTypedLength, setProfileTypedLength] = useState<number>(0);
   const [profileDeleting, setProfileDeleting] = useState<boolean>(false);
   const [showAllGamesMobile, setShowAllGamesMobile] = useState<boolean>(false);
+  const [hoveredGameCardTitle, setHoveredGameCardTitle] = useState<string | null>(null);
   const headerRef = useRef<HTMLElement | null>(null);
   const gameCardRefs = useRef<Array<HTMLElement | null>>([]);
   const [headerHeight, setHeaderHeight] = useState<number>(0);
@@ -726,7 +727,12 @@ export default function GameDeveloperPortfolio() {
                   className={`grid gap-6 sm:grid-cols-2 lg:grid-cols-3 transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${visibleSections.games ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
                   style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
                 >
-                {visibleGames.map((game) => (
+                {visibleGames.map((game) => {
+                    const isGameFocused: boolean = activeMobilePreview === game.title;
+                    const isGameBannerActive: boolean = isGameFocused || hoveredGameCardTitle === game.title;
+                    const ctaRibbonText: string = window.innerWidth < 640 ? "tap to expand" : "click to expand";
+
+                    return (
                     <article
                         key={game.title}
                         ref={(element) => {
@@ -734,7 +740,15 @@ export default function GameDeveloperPortfolio() {
                         }}
                         data-preview-card={game.title}
                         onClick={() => setSelectedGame(game)}
-                        className="group cursor-pointer overflow-hidden rounded-[28px] border border-zinc-800 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-white/15 hover:bg-white/[0.05] hover:shadow-black/35 will-change-transform"
+                        onMouseEnter={() => {
+                          if (window.innerWidth >= 640) {
+                            setHoveredGameCardTitle(game.title);
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          setHoveredGameCardTitle((previous) => (previous === game.title ? null : previous));
+                        }}
+                        className={`group game-card cursor-pointer overflow-hidden rounded-[28px] border border-zinc-800 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-white/15 hover:bg-white/[0.05] hover:shadow-black/35 will-change-transform ${isGameBannerActive ? "game-card-banner-active" : ""} ${isGameFocused ? "mobile-preview-active" : ""}`}
                     >
                       <div className="relative isolate aspect-[15/8.45] overflow-hidden rounded-t-[28px]">
                         <img
@@ -786,8 +800,14 @@ export default function GameDeveloperPortfolio() {
                             />
                         ) : null}
                       </div>
-
-                      <div className="p-5">
+                      <div className="game-card-cta-ribbon" aria-hidden="true">
+                        <div className="game-card-cta-ribbon-inner">
+                          <span className="game-card-cta-ribbon-text flex items-center">
+                            <span>{ctaRibbonText}</span>
+                          </span>
+                        </div>
+                      </div>
+                      <div className="game-card-body p-5">
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-center gap-2 min-w-0">
                             <h3 className="text-2xl font-semibold tracking-tight">{game.title}</h3>
@@ -823,7 +843,8 @@ export default function GameDeveloperPortfolio() {
 
                       </div>
                     </article>
-                ))}
+                    );
+                })}
                 </div>
 
                 {!showAllGamesMobile && games.length > MOBILE_VISIBLE_GAMES_COUNT && (
@@ -1106,6 +1127,90 @@ export default function GameDeveloperPortfolio() {
         </footer>
 
         <style>{`
+        .game-card {
+          --game-card-cta-height: 25px;
+        }
+
+        .game-card-cta-ribbon {
+          position: relative;
+          z-index: 1;
+          width: 100%;
+          height: var(--game-card-cta-height);
+          margin-top: calc(var(--game-card-cta-height) * -1);
+          pointer-events: none;
+          opacity: 0;
+          transform: translateY(100%);
+          transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
+        }
+
+        .game-card-cta-ribbon-inner {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          border-radius: 0;
+          border-top: 1px solid rgba(255,255,255,0.08);
+          border-bottom: 1px solid rgba(168, 85, 247, 0.28);
+          background:
+            linear-gradient(180deg, rgba(10,13,24,0.96) 0%, rgba(11,16,32,0.98) 100%),
+            linear-gradient(90deg,
+              rgba(168,85,247,0.28) 0%,
+              rgba(139,92,246,0.24) 35%,
+              rgba(99,102,241,0.22) 70%,
+              rgba(79,70,229,0.26) 100%
+            );
+          box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.24),
+            inset 0 1px 0 rgba(255,255,255,0.06),
+            inset 0 -1px 0 rgba(168,85,247,0.08);
+        }
+
+        .game-card-cta-ribbon-inner::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(90deg,
+              rgba(168,85,247,0.18) 0%,
+              rgba(99,102,241,0.12) 50%,
+              rgba(168,85,247,0.18) 100%
+            ),
+            linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 45%);
+          pointer-events: none;
+        }
+
+        .game-card-cta-ribbon-text {
+          position: relative;
+          z-index: 1;
+          font-size: 0.9rem;
+          font-weight: 500;
+          letter-spacing: 0.01em;
+          text-transform: none;
+          color: rgba(255,255,255,0.94);
+          text-shadow: 0 1px 8px rgba(0,0,0,0.24);
+        }
+
+        .game-card-body {
+          position: relative;
+          transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+          will-change: transform;
+        }
+
+        .game-card-banner-active .game-card-cta-ribbon,
+        .mobile-preview-active .game-card-cta-ribbon {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        @media (max-width: 639px) {
+          .game-card-cta-ribbon-text {
+            font-size: 0.82rem;
+          }
+        }
+
         .skill-chip {
           position: relative;
           display: inline-flex;
