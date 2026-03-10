@@ -187,7 +187,6 @@ export default function GameDeveloperPortfolio() {
   const previewVideoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
   const youtubeIframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({});
   const youtubePlayerRefs = useRef<Record<string, YouTubePlayerInstance | null>>({});
-  const activePreviewGameTitle: string | null = hoveredPreviewGameTitle ?? activeMobilePreview;
   const [headerHeight, setHeaderHeight] = useState<number>(0);
   useEffect(() => {
     Object.entries(previewVideoRefs.current).forEach(([title, video]) => {
@@ -195,7 +194,7 @@ export default function GameDeveloperPortfolio() {
         return;
       }
 
-      if (activePreviewGameTitle === title) {
+      if (hoveredPreviewGameTitle === title) {
         video.play().catch(() => {});
         return;
       }
@@ -208,14 +207,14 @@ export default function GameDeveloperPortfolio() {
         return;
       }
 
-      if (activePreviewGameTitle === title) {
+      if (hoveredPreviewGameTitle === title) {
         player.playVideo();
         return;
       }
 
       player.pauseVideo();
     });
-  }, [activePreviewGameTitle]);
+  }, [hoveredPreviewGameTitle]);
 
   useEffect(() => {
     if (youtubeApiReady) {
@@ -269,7 +268,7 @@ export default function GameDeveloperPortfolio() {
             event.target.mute();
             event.target.seekTo(offset, true);
 
-            if (activePreviewGameTitle === game.title) {
+            if (hoveredPreviewGameTitle === game.title) {
               event.target.playVideo();
               return;
             }
@@ -279,7 +278,7 @@ export default function GameDeveloperPortfolio() {
         }
       });
     });
-  }, [youtubeApiReady, activePreviewGameTitle]);
+  }, [youtubeApiReady, hoveredPreviewGameTitle]);
 
   useLayoutEffect(() => {
     const updateHeaderHeight = () => {
@@ -842,7 +841,7 @@ export default function GameDeveloperPortfolio() {
                   style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
                 >
                 {visibleGames.map((game) => {
-                    const shouldShowPreview: boolean = activePreviewGameTitle === game.title;
+                    const shouldShowPreview: boolean = activeMobilePreview === game.title || hoveredPreviewGameTitle === game.title;
                     const shouldMountYoutubePreview: boolean = activeMobilePreview === game.title || youtubeApiReady;
 
                     return (
