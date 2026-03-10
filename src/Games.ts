@@ -15,9 +15,6 @@ export type GameData = {
     videoStartOffset?: number;
 };
 
-// resolution used for video previews inside game cards
-const CARD_VIDEO_QUALITY = "hd480";
-
 // defaults
 // image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80",
 // video: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
@@ -32,7 +29,7 @@ export const games: GameData[] = [
         fullDescription: "Fast-paced action prototype built around boss encounters, modular enemy systems, and stylized arenas. Focused on combat feel, readable attacks, and encounter pacing.",
         tags: ["Boss Combat", "Encounter Design", "Action"],
         image: "/thumbnails/indigo-force-thumbnail.png",
-        youtube: `https://www.youtube.com/embed/Ukafi9JuWig?vq=${CARD_VIDEO_QUALITY}`,
+        youtube: "https://www.youtube.com/embed/Ukafi9JuWig",
         cta: "Play",
         link: "https://lordjneto.itch.io/indigo-force-boss-demo",
     },
@@ -46,7 +43,7 @@ export const games: GameData[] = [
         fullDescription: "Online multiplayer kart racing game built with Unity for mobile. I contributed in gameplay systems, kart handling, VFX and power-up logic, plus UI and Azure-backed store integrations within a small agile team at Gamearound.",
         tags: ["Multiplayer", "Kart Handling", "Power-ups"],
         image: "/thumbnails/mad-kart-racing-thumbnail.webp",
-        youtube: `https://www.youtube.com/embed/tY3SWgjkVto?vq=${CARD_VIDEO_QUALITY}`,
+        youtube: "https://www.youtube.com/embed/tY3SWgjkVto",
         cta: "Play",
         link: "https://play.google.com/store/apps/details?id=com.gamearound.metakartracers",
         videoStartOffset: 21,
@@ -61,7 +58,7 @@ export const games: GameData[] = [
         fullDescription: "Virtual reality shooting game where the player defends a barricade against waves of enemies. Focus on spatial awareness, aiming mechanics, and wave-based gameplay.",
         tags: ["Wave Defense", "VR Interaction", "Combat"],
         image: "/thumbnails/trollfall-thumbnail.png",
-        youtube: `https://www.youtube.com/embed/CeyQQVBW4Ds?vq=${CARD_VIDEO_QUALITY}`,
+        youtube: "https://www.youtube.com/embed/CeyQQVBW4Ds",
         cta: "Play",
         link: "https://hugo-martins.itch.io/trollfall",
         videoStartOffset: 10,
@@ -76,7 +73,7 @@ export const games: GameData[] = [
         fullDescription: "Arcade-style fishing game focused on timing mechanics and progressive difficulty, where players unlock new challenges and improve efficiency across runs.",
         tags: ["Timing Mechanics", "Progression", "Arcade"],
         image: "/thumbnails/fish-and-hooks-thumbnail.png",
-        youtube: `https://www.youtube.com/embed/vRhzqWo0sbk?vq=${CARD_VIDEO_QUALITY}`,
+        youtube: "https://www.youtube.com/embed/vRhzqWo0sbk",
         cta: "Play",
         link: "https://lordjneto.itch.io/fish-and-hooks",
     },
@@ -90,7 +87,7 @@ export const games: GameData[] = [
         fullDescription: "Narrative puzzle adventure where the player explores peaceful islands that slowly reveal a darker truth. Each island presents environmental puzzles that uncover clues about the player's past sins, leading toward a final revelation.",
         tags: ["Puzzle", "Cutscenes", "Interactive"],
         image: "/thumbnails/edens-path-thumbnail.png",
-        youtube: `https://www.youtube.com/embed/-C2r6jgz7z0?vq=${CARD_VIDEO_QUALITY}`,
+        youtube: "https://www.youtube.com/embed/-C2r6jgz7z0",
         cta: "Play",
         link: "https://lordjneto.itch.io/edens-path",
         videoStartOffset: 5,
@@ -105,7 +102,7 @@ export const games: GameData[] = [
         fullDescription: "Arcade-style action game focused on quick reactions and enemy-clearing gameplay. Players fight through waves of skeleton enemies, breaking bones and racking up points while trying to survive increasingly chaotic encounters.",
         tags: ["Arcade", "Enemy Waves", "Action"],
         image: "/thumbnails/bone-breaker-thumbnail.png",
-        youtube: `https://www.youtube.com/embed/6ZsHu2egLSw?vq=${CARD_VIDEO_QUALITY}`,
+        youtube: "https://www.youtube.com/embed/6ZsHu2egLSw",
         cta: "Play",
         link: "https://sabrinasilvaart.itch.io/bone-breaker",
     },
