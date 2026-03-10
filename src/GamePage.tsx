@@ -82,7 +82,6 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
         );
     }
 
-    const contextText: string = game.projectContext ?? game.fullDescription;
     const roleText: string = game.role ?? "Game Developer";
     const contributions: string[] = game.contributions ?? [];
     const highlights: string[] = game.technicalHighlights ?? [];
@@ -145,7 +144,7 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
                                     </h1>
 
                                     <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-300 sm:text-lg">
-                                        {game.description}
+                                        {game.quickDescription}
                                     </p>
                                 </div>
 
@@ -190,7 +189,7 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
         About the Project
     </p>
     <p className="mt-4 max-w-4xl text-base leading-8 text-zinc-300">
-    {contextText}
+    {game.fullDescription}
     </p>
     </section>
 

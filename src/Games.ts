@@ -5,9 +5,8 @@ export type GameData = {
     platform: string;
     year: string;
     status: string;
-    description: string;
+    quickDescription: string;
     fullDescription: string;
-    projectContext?: string;
     role?: string;
     contributions?: string[];
     technicalHighlights?: string[];
@@ -32,15 +31,14 @@ export const games: GameData[] = [
         platform: "PC",
         year: "2026",
         status: "In Development",
-        description: "PC boss arena twin-stick shooter focused on fast boss fights.",
-        fullDescription: "Fast-paced action prototype built around boss encounters, modular enemy systems, and stylized arenas. Focused on combat feel, readable attacks, and encounter pacing.",
-        projectContext: "Solo action prototype focused on boss encounters, combat readability, and encounter pacing.",
+        quickDescription: "Solo‑developed arena boss shooter built to explore tight combat feel and readable encounters.",
+        fullDescription: "Personal project used to design boss encounters and experiment with scalable gameplay architecture. Built on my modular JNeto Game Entity Framework for reusable combat, entity, and gameplay systems.",
         role: "Solo Developer and Designer",
         contributions: [
-            "Gameplay programming",
-            "Boss encounter design",
-            "Combat feel and responsiveness design",
-            "UI and feedback polish",
+            "Creation of a game entity framework",
+            "Boss encounter and behaviour design",
+            "Combat feedback and responsiveness",
+            "Gameplay and VFX / SFX Integration",
         ],
         technicalHighlights: [
             "Modular enemy systems",
@@ -60,15 +58,14 @@ export const games: GameData[] = [
         platform: "Mobile",
         year: "2025",
         status: "Published",
-        description: "Online multiplayer kart racing game for mobile, focused on arcade and competitive play.",
-        fullDescription: "Online multiplayer kart racing game built with Unity for mobile. I contributed in gameplay systems, kart handling, VFX and power-up logic, plus UI and Azure-backed store integrations within a small agile team at Gamearound.",
-        projectContext: "Mobile multiplayer kart racing project developed within a small team at Gamearound.",
+        quickDescription: "Online multiplayer kart racing game for mobile, focused on arcade and competitive play.",
+        fullDescription: "First professional role at Gamearound, contributing to an online mobile kart racer. Worked on gameplay programming, VFX/SFX integration, C# tooling, and front‑end implementation of the in‑game store using backend purchase and currency APIs.",
         role: "Gameplay Programmer",
         contributions: [
-            "C# Tooling",
+            "C# Tooling (in-house tools)",
             "UI and store integration support",
-            "Kart handling tuning",
-            "Power-up logic",
+            "Kart gameplay handling tuning",
+            "Power-up logic and scaling",
         ],
         technicalHighlights: [
             "Arcade driving feel",
@@ -89,15 +86,13 @@ export const games: GameData[] = [
         platform: "VR",
         year: "2026",
         status: "Prototype",
-        description: "VR defense shooter where players protect a barricade from incoming trolls.",
-        fullDescription: "Virtual reality shooting game where the player defends a barricade against waves of enemies. Focus on spatial awareness, aiming mechanics, and wave-based gameplay.",
-        projectContext: "Prototype VR wave-defense experience centered on spatial awareness and barricade defense.",
-        role: "Gameplay and VR Developer",
+        quickDescription: "VR defense shooter where players protect a barricade from incoming trolls.",
+        fullDescription: "University VR project developed in a team of 5, focused on barricade defense against incoming waves of enemies. Implemented enemy systems, projectile combat, VR interactions, and performance optimizations to maintain stable VR frame rates.",        role: "Gameplay and VR Developer",
         contributions: [
-            "VR gameplay implementation",
-            "Wave-based combat design",
-            "Enemy pressure balancing",
-            "Interaction feel tuning",
+            "Enemy and wave systems",
+            "Projectile combat logic",
+            "VR interaction mechanics",
+            "Performance optimization for VR",
         ],
         technicalHighlights: [
             "VR aiming and interaction flow",
@@ -118,9 +113,8 @@ export const games: GameData[] = [
         platform: "Mobile",
         year: "2024",
         status: "Published",
-        description: "Mobile fishing game built around timing, progression, and escalating difficulty.",
-        fullDescription: "Arcade-style fishing game focused on timing mechanics and progressive difficulty, where players unlock new challenges and improve efficiency across runs.",
-        projectContext: "Casual mobile fishing game built around timing, progression, and escalating challenge.",
+        quickDescription: "Mobile fishing game built around timing, progression, and escalating difficulty.",
+        fullDescription: "First mobile project developed in a team of 3. Implemented the core fishing mechanic, level structure, and designed the difficulty progression for this arcade-style game built around timing and increasingly challenging fish patterns.",
         role: "Gameplay Developer",
         contributions: [
             "Core fishing loop implementation",
@@ -146,15 +140,14 @@ export const games: GameData[] = [
         platform: "PC",
         year: "2023",
         status: "Prototype",
-        description: "Puzzle adventure set across paradise-like islands that hide the truth about the player's sins.",
-        fullDescription: "Narrative puzzle adventure where the player explores peaceful islands that slowly reveal a darker truth. Each island presents environmental puzzles that uncover clues about the player's past sins, leading toward a final revelation.",
-        projectContext: "Narrative puzzle prototype built around environmental storytelling and gradual revelation.",
+        quickDescription: "Puzzle adventure set across paradise-like islands that hide the truth about the player's sins.",
+        fullDescription: "University puzzle‑adventure project developed in a team of 3, built around cutscene‑driven storytelling. Implemented systems including puzzles, inventory and crafting interactions, and early AI‑generated voice dialogue for narrative sequences.",
         role: "Gameplay Developer and Puzzle Designer",
         contributions: [
-            "Puzzle flow design",
-            "Narrative pacing support",
-            "Environmental interaction setup",
-            "Cutscene integration",
+            "Puzzle gameplay systems",
+            "Inventory and crafting mechanics",
+            "Cutscene triggering and integration",
+            "Gameplay interaction programming",
         ],
         technicalHighlights: [
             "Environmental puzzle structure",
@@ -175,19 +168,18 @@ export const games: GameData[] = [
         platform: "PC",
         year: "2024",
         status: "Prototype",
-        description: "Fast-paced arcade game where players smash skeleton enemies and survive escalating waves.",
-        fullDescription: "Arcade-style action game focused on quick reactions and enemy-clearing gameplay. Players fight through waves of skeleton enemies, breaking bones and racking up points while trying to survive increasingly chaotic encounters.",
-        projectContext: "Arcade prototype focused on fast reactions, enemy waves, and score-driven survival.",
-        role: "Gameplay Developer",
+        quickDescription: "Fast-paced arcade game where players smash skeleton enemies and survive escalating waves.",
+        fullDescription: "Game jam project developed in a team of 3, where I mentored two beginner developers. Players stop skeletons escaping the graveyard through waves, upgrades, and increasing difficulty.",
+        role: "Gameplay Developer, Mentor and Designer",
         contributions: [
-            "Enemy wave gameplay",
-            "Combat pacing",
-            "Arcade scoring flow",
-            "Moment responsiveness",
+            "Mentoring junior teammates",
+            "Combat and enemy systems",
+            "Upgrade shop and progression",
+            "Difficulty and wave balancing",
         ],
         technicalHighlights: [
             "Wave-based survival loop",
-            "Score-driven arcade progression",
+            "Upgrade-driven difficulty scaling",
         ],
         tags: ["Arcade", "Enemy Waves", "Action"],
         image: "/thumbnails/bone-breaker-thumbnail.png",

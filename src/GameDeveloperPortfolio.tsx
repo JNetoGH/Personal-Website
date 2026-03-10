@@ -875,7 +875,7 @@ export default function GameDeveloperPortfolio() {
                         <p className="mt-1 text-sm text-zinc-400">
                           {game.genre} • {game.platform} • {game.year}
                         </p>
-                        <p className="mt-3 text-sm leading-6 text-zinc-300">{game.description}</p>
+                        <p className="mt-3 text-sm leading-6 text-zinc-300">{game.quickDescription}</p>
 
                         <div className="mt-4 flex flex-wrap gap-2">
                           {game.tags.map((tag: string) => (
