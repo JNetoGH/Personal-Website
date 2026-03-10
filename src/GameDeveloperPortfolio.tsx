@@ -191,6 +191,35 @@ export default function GameDeveloperPortfolio() {
   }, []);
 
   useEffect(() => {
+    const previousTitle = document.title;
+    document.title = "JNeto Website";
+
+    return () => {
+      document.title = previousTitle;
+    };
+  }, []);
+
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = "JNeto Website";
+
+    const existingFavicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    const favicon = existingFavicon ?? document.createElement("link");
+
+    favicon.rel = "icon";
+    favicon.type = "image/png";
+    favicon.href = "/favicon.png";
+
+    if (!existingFavicon) {
+      document.head.appendChild(favicon);
+    }
+
+    return () => {
+      document.title = previousTitle;
+    };
+  }, []);
+
+  useEffect(() => {
     const updateMobilePreview = () => {
       if (window.innerWidth >= 640) {
         setActiveMobilePreview(null);
