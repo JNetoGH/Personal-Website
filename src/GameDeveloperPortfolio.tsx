@@ -1082,6 +1082,9 @@ export default function GameDeveloperPortfolio() {
 
         .controller-clipart {
           left: var(--controller-left-desktop);
+          animation: controllerFloat 4.8s ease-in-out infinite;
+          transform-origin: center center;
+          will-change: transform;
         }
 
         @media (max-width: 639px) {
@@ -1100,6 +1103,14 @@ export default function GameDeveloperPortfolio() {
           vertical-align: baseline;
         }
 
+        @keyframes controllerFloat {
+          0%, 100% {
+            transform: translateY(-50%) rotate(-18deg);
+          }
+          50% {
+            transform: translateY(calc(-50% - 8px)) rotate(-16deg);
+          }
+        }
         @keyframes caretBlink {
           0%, 50%, 100% { opacity: 1; }
           35%, 85% { opacity: 0; }
