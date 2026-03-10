@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import GameDeveloperPortfolio from "./GameDeveloperPortfolio";
-import GamePage from "./GamePage";
+import { Suspense, useEffect, lazy } from "react";
+
+const GameDeveloperPortfolio = lazy(() => import("./GameDeveloperPortfolio"));
+const GamePage = lazy(() => import("./GamePage"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -17,10 +18,18 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<GameDeveloperPortfolio />} />
-        <Route path="/games/:slug" element={<GamePage />} />
-      </Routes>
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-[#060814] text-zinc-100 flex items-center justify-center text-sm">
+            Loading…
+          </div>
+        }
+      >
+        <Routes>
+          <Route path="/" element={<GameDeveloperPortfolio />} />
+          <Route path="/games/:slug" element={<GamePage />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

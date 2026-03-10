@@ -166,6 +166,7 @@ export default function GameDeveloperPortfolio() {
   const headerRef = useRef<HTMLElement | null>(null);
   const gameCardRefs = useRef<Array<HTMLElement | null>>([]);
   const [headerHeight, setHeaderHeight] = useState<number>(0);
+  const [isMobile, setIsMobile] = useState<boolean>(() => window.innerWidth < 640);
 
   useLayoutEffect(() => {
     const updateHeaderHeight = () => {
@@ -188,6 +189,21 @@ export default function GameDeveloperPortfolio() {
     return () => {
       resizeObserver.disconnect();
       window.removeEventListener("resize", updateHeaderHeight);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const nextIsMobile: boolean = window.innerWidth < 640;
+      setIsMobile((previous) => (previous === nextIsMobile ? previous : nextIsMobile));
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -350,11 +366,6 @@ export default function GameDeveloperPortfolio() {
 
   useEffect(() => {
     const updateMobilePreview = () => {
-      if (window.innerWidth >= 640) {
-        setActiveMobilePreview(null);
-        return;
-      }
-
       const cards: HTMLElement[] = Array.from(
         document.querySelectorAll<HTMLElement>("[data-preview-card]")
       );
@@ -389,16 +400,36 @@ export default function GameDeveloperPortfolio() {
       setActiveMobilePreview((previous) => (previous === closestId ? previous : closestId));
     };
 
-    updateMobilePreview();
+    if (!isMobile) {
+      setActiveMobilePreview(null);
+      return;
+    }
 
-    window.addEventListener("scroll", updateMobilePreview, { passive: true });
-    window.addEventListener("resize", updateMobilePreview);
+    let ticking = false;
+
+    const handleScrollOrResize = () => {
+      if (ticking) {
+        return;
+      }
+
+      ticking = true;
+
+      window.requestAnimationFrame(() => {
+        updateMobilePreview();
+        ticking = false;
+      });
+    };
+
+    handleScrollOrResize();
+
+    window.addEventListener("scroll", handleScrollOrResize, { passive: true });
+    window.addEventListener("resize", handleScrollOrResize);
 
     return () => {
-      window.removeEventListener("scroll", updateMobilePreview);
-      window.removeEventListener("resize", updateMobilePreview);
+      window.removeEventListener("scroll", handleScrollOrResize);
+      window.removeEventListener("resize", handleScrollOrResize);
     };
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     const timeoutId: number = window.setTimeout(() => {
@@ -472,22 +503,32 @@ export default function GameDeveloperPortfolio() {
         }
       });
 
-      if (bestVisibleRatio >= 0.51) {
-        setActiveSection((previous) => (previous === bestSection ? previous : bestSection));
-        return;
-      }
-
       setActiveSection((previous) => (previous === bestSection ? previous : bestSection));
     };
 
-    updateActiveSection();
+    let ticking = false;
 
-    window.addEventListener("scroll", updateActiveSection, { passive: true });
-    window.addEventListener("resize", updateActiveSection);
+    const handleScrollOrResize = () => {
+      if (ticking) {
+        return;
+      }
+
+      ticking = true;
+
+      window.requestAnimationFrame(() => {
+        updateActiveSection();
+        ticking = false;
+      });
+    };
+
+    handleScrollOrResize();
+
+    window.addEventListener("scroll", handleScrollOrResize, { passive: true });
+    window.addEventListener("resize", handleScrollOrResize);
 
     return () => {
-      window.removeEventListener("scroll", updateActiveSection);
-      window.removeEventListener("resize", updateActiveSection);
+      window.removeEventListener("scroll", handleScrollOrResize);
+      window.removeEventListener("resize", handleScrollOrResize);
     };
   }, []);
 
@@ -508,9 +549,9 @@ export default function GameDeveloperPortfolio() {
   };
 
   const MOBILE_COLLAPSE_SCROLL_INDEX: number = MOBILE_VISIBLE_GAMES_COUNT - 1;
-  const visibleGames: GameData[] = showAllGamesMobile || window.innerWidth >= 640
-    ? games
-    : games.slice(0, MOBILE_VISIBLE_GAMES_COUNT);
+  const isDesktop: boolean = !isMobile;
+  const visibleGames: GameData[] =
+    showAllGamesMobile || isDesktop ? games : games.slice(0, MOBILE_VISIBLE_GAMES_COUNT);
 
   const handleToggleGamesMobile = () => {
     if (showAllGamesMobile) {
@@ -742,7 +783,7 @@ export default function GameDeveloperPortfolio() {
                 {visibleGames.map((game) => {
                     const isGameFocused: boolean = activeMobilePreview === game.title;
                     const isGameBannerActive: boolean = isGameFocused || hoveredGameCardTitle === game.title;
-                    const ctaRibbonText: string = window.innerWidth < 640 ? "tap ‎ to ‎ open" : "click ‎ to ‎  open";
+                    const ctaRibbonText: string = isMobile ? "tap ‎ to ‎ open" : "click ‎ to ‎  open";
 
                     return (
                     <article
@@ -753,7 +794,7 @@ export default function GameDeveloperPortfolio() {
                         data-preview-card={game.title}
                         onClick={() => navigate(`/games/${getGameSlug(game)}`)}
                         onMouseEnter={() => {
-                          if (window.innerWidth >= 640) {
+                          if (!isMobile) {
                             setHoveredGameCardTitle(game.title);
                           }
                         }}
