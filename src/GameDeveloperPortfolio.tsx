@@ -529,9 +529,21 @@ export default function GameDeveloperPortfolio() {
               className={`mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
             >
               <div
-                className={`transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${profileReady ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                className={`relative transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${profileReady ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
                 style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
               >
+                <div className="pointer-events-none absolute inset-0 hidden lg:block" style={{ transform: "translateY(-10%)" }}>
+                  <div className="accent-rain-line absolute right-[300px] top-[10px] h-[54px] w-[10px] rounded-full bg-violet-300/95" />
+                  <div className="accent-rain-line accent-rain-delay-1 absolute right-[206px] top-[2px] h-[42px] w-[8px] rounded-full bg-violet-300/90" />
+                  <div className="accent-rain-line accent-rain-delay-2 absolute right-[134px] top-[44px] h-[24px] w-[7px] rounded-full bg-violet-300/85" />
+                  <div className="accent-rain-line accent-rain-delay-3 absolute right-[252px] top-[116px] h-[22px] w-[8px] rounded-full bg-violet-300/90" />
+                  <div className="accent-rain-line accent-rain-delay-4 absolute right-[356px] top-[182px] h-[28px] w-[9px] rounded-full bg-violet-300/85" />
+                  <div className="accent-rain-line accent-rain-delay-5 absolute right-[172px] top-[166px] h-[46px] w-[9px] rounded-full bg-violet-300/95" />
+                  <div className="accent-rain-line accent-rain-delay-6 absolute right-[82px] top-[224px] h-[34px] w-[8px] rounded-full bg-violet-300/88" />
+                  <div className="accent-rain-line accent-rain-delay-7 absolute right-[278px] top-[274px] h-[18px] w-[7px] rounded-full bg-violet-300/82" />
+                  <div className="accent-rain-line accent-rain-delay-8 absolute right-[156px] top-[306px] h-[16px] w-[6px] rounded-full bg-violet-300/78" />
+                  <div className="accent-rain-line accent-rain-delay-9 absolute right-[12px] top-[292px] h-[38px] w-[9px] rounded-full bg-violet-300/90" />
+                </div>
                 <p className="mb-4 text-sm uppercase tracking-[0.3em] text-zinc-300">
                   <span className="text-violet-300">Developer</span> •{" "}
                   <span className="text-violet-300">Designer</span> •{" "}
@@ -1018,6 +1030,39 @@ export default function GameDeveloperPortfolio() {
         </footer>
 
         <style>{`
+        .accent-rain-line {
+          box-shadow: 0 0 18px rgba(196, 132, 252, 0.35);
+          animation: accentRainFall 6.2s linear infinite;
+          will-change: transform, opacity;
+        }
+
+        .accent-rain-delay-1 { animation-delay: -0.8s; }
+        .accent-rain-delay-2 { animation-delay: -1.6s; }
+        .accent-rain-delay-3 { animation-delay: -2.1s; }
+        .accent-rain-delay-4 { animation-delay: -2.9s; }
+        .accent-rain-delay-5 { animation-delay: -3.7s; }
+        .accent-rain-delay-6 { animation-delay: -4.2s; }
+        .accent-rain-delay-7 { animation-delay: -4.9s; }
+        .accent-rain-delay-8 { animation-delay: -5.4s; }
+        .accent-rain-delay-9 { animation-delay: -5.9s; }
+
+        @keyframes accentRainFall {
+          0% {
+            transform: translate3d(0, -26px, 0);
+            opacity: 0;
+          }
+          12% {
+            opacity: 0.95;
+          }
+          78% {
+            opacity: 0.9;
+          }
+          100% {
+            transform: translate3d(0, 120px, 0);
+            opacity: 0;
+          }
+        }
+
         .controller-clipart {
           left: var(--controller-left-desktop);
         }
