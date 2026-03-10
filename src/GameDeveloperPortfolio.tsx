@@ -401,7 +401,6 @@ export default function GameDeveloperPortfolio() {
     };
 
     if (!isMobile) {
-      setActiveMobilePreview(null);
       return;
     }
 
@@ -552,6 +551,7 @@ export default function GameDeveloperPortfolio() {
   const isDesktop: boolean = !isMobile;
   const visibleGames: GameData[] =
     showAllGamesMobile || isDesktop ? games : games.slice(0, MOBILE_VISIBLE_GAMES_COUNT);
+  const currentMobilePreview: string | null = isMobile ? activeMobilePreview : null;
 
   const handleToggleGamesMobile = () => {
     if (showAllGamesMobile) {
@@ -781,7 +781,7 @@ export default function GameDeveloperPortfolio() {
               <div className="relative">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {visibleGames.map((game) => {
-                    const isGameFocused: boolean = activeMobilePreview === game.title;
+                    const isGameFocused: boolean = currentMobilePreview === game.title;
                     const isGameBannerActive: boolean = isGameFocused || hoveredGameCardTitle === game.title;
                     const ctaRibbonText: string = isMobile ? "tap ‎ to ‎ open" : "click ‎ to ‎  open";
 
@@ -809,7 +809,7 @@ export default function GameDeveloperPortfolio() {
                             alt={game.title}
                             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
                                 game.video || game.youtube
-                                    ? activeMobilePreview === game.title
+                                    ? currentMobilePreview === game.title
                                         ? "opacity-0 sm:opacity-100 sm:group-hover:opacity-0"
                                         : "opacity-100 sm:group-hover:opacity-0"
                                     : "opacity-100"
@@ -833,7 +833,7 @@ export default function GameDeveloperPortfolio() {
                                   e.currentTarget.style.display = "none";
                                 }}
                                 className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-                                    activeMobilePreview === game.title
+                                    currentMobilePreview === game.title
                                         ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                                         : "opacity-0 sm:group-hover:opacity-100"
                                 }`}
@@ -846,7 +846,7 @@ export default function GameDeveloperPortfolio() {
                                 referrerPolicy="strict-origin-when-cross-origin"
                                 allowFullScreen
                                 className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-300 ${
-                                    activeMobilePreview === game.title
+                                    currentMobilePreview === game.title
                                         ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                                         : "opacity-0 sm:group-hover:opacity-100"
                                 }`}
