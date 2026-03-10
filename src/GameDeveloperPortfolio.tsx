@@ -156,6 +156,41 @@ export default function GameDeveloperPortfolio() {
   }, [selectedGame]);
 
   useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const root = document.getElementById("root");
+
+    const previousHtmlBackground = html.style.background;
+    const previousBodyBackground = body.style.background;
+    const previousRootBackground = root?.style.background ?? "";
+    const previousHtmlMinHeight = html.style.minHeight;
+    const previousBodyMinHeight = body.style.minHeight;
+    const previousRootMinHeight = root?.style.minHeight ?? "";
+
+    html.style.background = "#060814";
+    body.style.background = "#060814";
+    html.style.minHeight = "100%";
+    body.style.minHeight = "100%";
+
+    if (root) {
+      root.style.background = "#060814";
+      root.style.minHeight = "100%";
+    }
+
+    return () => {
+      html.style.background = previousHtmlBackground;
+      body.style.background = previousBodyBackground;
+      html.style.minHeight = previousHtmlMinHeight;
+      body.style.minHeight = previousBodyMinHeight;
+
+      if (root) {
+        root.style.background = previousRootBackground;
+        root.style.minHeight = previousRootMinHeight;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const updateMobilePreview = () => {
       if (window.innerWidth >= 640) {
         setActiveMobilePreview(null);
