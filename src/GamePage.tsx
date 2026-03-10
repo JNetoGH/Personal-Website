@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import { useEffect, type JSX } from "react";
 import { useParams } from "react-router-dom";
 import { games, type GameData } from "./Games.ts";
 
@@ -56,6 +56,22 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
     const { slug } = useParams();
     const game: GameData | undefined = games.find((g) => g.slug === slug);
 
+    useEffect(() => {
+        const html = document.documentElement;
+        const body = document.body;
+
+        const prevHtmlBg = html.style.backgroundColor;
+        const prevBodyBg = body.style.backgroundColor;
+
+        html.style.backgroundColor = "#060814";
+        body.style.backgroundColor = "#060814";
+
+        return () => {
+            html.style.backgroundColor = prevHtmlBg;
+            body.style.backgroundColor = prevBodyBg;
+        };
+    }, []);
+
     if (!game) {
         return (
             <div className="min-h-screen flex items-center justify-center text-zinc-400">
@@ -71,44 +87,44 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
 
     return (
         <div className="min-h-screen bg-[#060814] text-zinc-100">
-        <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8 lg:py-10">
-        <div className="mb-6 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-            {onBack ? (
-                        <button
-                            type="button"
-                    onClick={onBack}
-                className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-zinc-100 transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10"
-                    >
-                    Back
-                    </button>
-    ) : null}
+        <div className="mx-auto max-w-7xl px-0 py-0 lg:px-8 lg:py-10">
 
-    <p className="text-xs uppercase tracking-[0.28em] text-zinc-400">
-        Project Page
-    </p>
-    </div>
-
-    <a
-    href={game.link}
-    target="_blank"
-    rel="noreferrer"
-    className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 px-5 py-3 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]"
-        >
-        {game.cta}
-        </a>
-        </div>
-
-        <section className="overflow-hidden rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.04)_0%,_rgba(255,255,255,0.02)_100%)] shadow-2xl shadow-black/30">
-    <div className="relative aspect-[16/7] overflow-hidden">
+        <section className="overflow-hidden border-y border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.04)_0%,_rgba(255,255,255,0.02)_100%)] sm:rounded-[36px] sm:border sm:border-white/10 shadow-2xl shadow-black/30">
+    <div className="relative aspect-[16/7] lg:aspect-[16/4.25] overflow-hidden">
     <img
         src={game.image}
     alt={game.title}
     className="h-full w-full object-cover"
     />
-    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,8,20,0.08)_0%,rgba(6,8,20,0.26)_45%,rgba(6,8,20,0.92)_100%)]" />
+    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,8,20,0.1)_0%,rgba(6,8,20,0.45)_30%,rgba(6,8,20,0.82)_62%,rgba(6,8,20,0.98)_100%)]" />
 
-    <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 lg:p-10">
+    <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8 lg:p-10">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          {onBack ? (
+            <button
+              type="button"
+              onClick={onBack}
+              className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-black/30 px-4 py-2 text-sm font-medium text-zinc-100 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-black/45"
+            >
+              Back
+            </button>
+          ) : null}
+
+          <p className="text-xs uppercase tracking-[0.28em] text-zinc-300/85">
+            Project Page
+          </p>
+        </div>
+
+        <a
+          href={game.link}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-black/30 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]"
+        >
+          {game.cta}
+        </a>
+      </div>
     <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
     <div className="min-w-0">
     <div className="mb-3 flex items-center gap-2">
@@ -118,7 +134,7 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
         </span>
         </div>
 
-        <h1 className="max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+        <h1 className="max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-[3.4rem] lg:leading-[1.02]">
         {game.title}
         </h1>
 
@@ -127,7 +143,7 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
         </p>
         </div>
 
-        <div className="flex shrink-0 flex-wrap items-center gap-3">
+        <div className="flex shrink-0 flex-wrap items-center gap-3 lg:max-w-[38%] lg:justify-end">
     <span className={`rounded-full border px-4 py-2 text-sm font-medium ${getStatusClasses(game.status)}`}>
     {game.status === "In Development" ? "In Dev" : game.status}
     </span>
