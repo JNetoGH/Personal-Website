@@ -58,7 +58,7 @@ export const games: GameData[] = [
         platform: "Mobile",
         year: "2025",
         status: "Published",
-        description: "Online multiplayer kart racing game for mobile, focused on arcade handling and competitive play.",
+        description: "Online multiplayer kart racing game for mobile, focused on arcade and competitive play.",
         fullDescription: "Online multiplayer kart racing game built with Unity for mobile. I contributed in gameplay systems, kart handling, VFX and power-up logic, plus UI and Azure-backed store integrations within a small agile team at Gamearound.",
         projectContext: "Mobile multiplayer kart racing project developed within a small team at Gamearound.",
         role: "Gameplay Programmer",

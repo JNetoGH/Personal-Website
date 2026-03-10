@@ -1,5 +1,5 @@
 import { useEffect, type JSX } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { games, type GameData } from "./Games.ts";
 
 type GamePageProps = {
@@ -54,7 +54,9 @@ function getStatusClasses(status: string): string {
 
 export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element {
     const { slug } = useParams();
+    const navigate = useNavigate();
     const game: GameData | undefined = games.find((g) => g.slug === slug);
+    const handleBack = onBack ?? (() => navigate("/"));
 
     useEffect(() => {
         const html = document.documentElement;
@@ -86,7 +88,31 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
     const highlights: string[] = game.technicalHighlights ?? [];
 
     return (
-        <div className="min-h-screen bg-[#060814] text-zinc-100">
+        <>
+            <div className="min-h-screen bg-[#060814] text-zinc-100">
+            <button
+                type="button"
+                onClick={handleBack}
+                aria-label="Back to Portfolio"
+                className="fixed left-4 bottom-4 lg:top-10 lg:bottom-auto z-[120] flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500 via-rose-500 to-pink-500 px-4 py-2 text-white shadow-lg shadow-red-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.98]"
+            >
+                <span className="relative flex h-7 w-8 items-center justify-center overflow-hidden">
+                    <span className="absolute inset-0 animate-[backArrowPulse_1.8s_ease-in-out_infinite] rounded-full bg-white/10 blur-md" />
+                    <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        className="relative h-5 w-5 animate-[backArrowFloat_1.5s_ease-in-out_infinite]"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </span>
+
+                <span className="text-xs font-medium uppercase tracking-[0.22em] text-zinc-200/90">
+                    Portfolio
+                </span>
+            </button>
         <div className="mx-auto max-w-7xl px-0 lg:px-8 lg:py-7">
 
         <section className="overflow-hidden border-y border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.04)_0%,_rgba(255,255,255,0.02)_100%)] sm:rounded-[36px] sm:border sm:border-white/10 shadow-2xl shadow-black/30">
@@ -131,15 +157,6 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
         <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,0.8fr)] lg:p-10">
     <div className="space-y-8">
       <section className="flex flex-wrap items-center gap-3">
-        {onBack ? (
-          <button
-            type="button"
-            onClick={onBack}
-            className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-5 text-sm font-medium text-zinc-100 transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10"
-          >
-            Back
-          </button>
-        ) : null}
 
         <a
           href={game.link}
@@ -202,22 +219,49 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
         />
         </div>
 
-        <div className="flex min-h-[220px] items-center justify-center rounded-[24px] border border-dashed border-white/10 bg-white/[0.02] px-6 text-center text-sm leading-7 text-zinc-400">
+        <div className="hidden sm:flex min-h-[220px] items-center justify-center rounded-[24px] border border-dashed border-white/10 bg-white/[0.02] px-6 text-center text-sm leading-7 text-zinc-400">
         Additional screenshots can be added here later.
     </div>
     </div>
     </section>
+    <section className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 lg:hidden">
+    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-violet-300">
+        Quick Info
+    </p>
+
+    <div className="mt-4 space-y-3 text-sm text-zinc-300">
+    <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-3">
+    <span className="text-zinc-400">Genre</span>
+        <span>{game.genre}</span>
+        </div>
+
+        <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-3">
+    <span className="text-zinc-400">Platform</span>
+        <span>{game.platform}</span>
+        </div>
+
+        <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-3">
+    <span className="text-zinc-400">Year</span>
+        <span>{game.year}</span>
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+    <span className="text-zinc-400">Status</span>
+        <span>{game.status === "In Development" ? "In Dev" : game.status}</span>
+        </div>
+        </div>
+        </section>
     </div>
 
-    <div className="space-y-6">
+    <div className="order-first space-y-6 lg:order-none">
       {(game.video || game.youtube) ? (
         <section className="overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03]">
           <div className="border-b border-white/10 px-5 py-4">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-violet-300">
-              Gameplay Video
+              Featured Video
             </p>
           </div>
-          <div className="aspect-[16/10] overflow-hidden bg-black">
+          <div className="aspect-[16/9] overflow-hidden bg-black">
             {game.video ? (
               <video
                 src={game.video}
@@ -231,7 +275,7 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
                   const targetTime = Math.min(offset, Math.max(0, video.duration - 0.1));
                   video.currentTime = Number.isFinite(targetTime) ? targetTime : offset;
                 }}
-                className="h-full w-full object-cover"
+                className="block h-full w-full object-cover"
               />
             ) : game.youtube ? (
               <iframe
@@ -240,7 +284,7 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
-                className="h-full w-full"
+                className="block h-full w-full"
               />
             ) : null}
           </div>
@@ -276,33 +320,6 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
     )}
     </section>
 
-    <section className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 lg:hidden">
-    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-violet-300">
-        Quick Info
-    </p>
-
-    <div className="mt-4 space-y-3 text-sm text-zinc-300">
-    <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-3">
-    <span className="text-zinc-400">Genre</span>
-        <span>{game.genre}</span>
-        </div>
-
-        <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-3">
-    <span className="text-zinc-400">Platform</span>
-        <span>{game.platform}</span>
-        </div>
-
-        <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-3">
-    <span className="text-zinc-400">Year</span>
-        <span>{game.year}</span>
-        </div>
-
-        <div className="flex items-center justify-between gap-4">
-    <span className="text-zinc-400">Status</span>
-        <span>{game.status === "In Development" ? "In Dev" : game.status}</span>
-        </div>
-        </div>
-        </section>
         </div>
         </div>
         </section>
@@ -312,5 +329,18 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
             <p>© {new Date().getFullYear()} JNeto (Joao Neto). All rights reserved.</p>
           </div>
         </footer>
-        </div>
-); }
+            </div>
+            <style>{`
+@keyframes backArrowFloat {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-5px); }
+}
+
+@keyframes backArrowPulse {
+  0%, 100% { opacity: 0.18; transform: scale(0.9); }
+  50% { opacity: 0.38; transform: scale(1.08); }
+}
+`}</style>
+        </>
+    );
+}
