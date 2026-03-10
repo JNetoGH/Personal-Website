@@ -40,8 +40,9 @@ const technologies: SkillItem[] = [
   { label: "C#", starred: true },
   { label: "Netcode" },
   { label: "Azure PlayFab", starred: true },
-  { label: "Python" },
+  { label: "C++" },
   { label: "Git" , starred: true },
+  { label: "Python" },
   { label: "HTML / CSS" },
   { label: "React" },
   { label: "JavaScript" },
@@ -49,13 +50,15 @@ const technologies: SkillItem[] = [
 ];
 
 const concepts: SkillItem[] = [
-  { label: "PC / Mobile / Virtual Reality", starred: true },
+  { label: "PC ", starred: true },
+  { label: "Mobile", starred: true },
+  { label: "Virtual Reality"},
   { label: "UX / UI", starred: true},
-  { label: "Agile" },
   { label: "Multiplayer"},
+  { label: "Agile Methods" },
   { label: "Game Design", starred: true },
   { label: "Level Design", starred: true },
-  { label: "Prototyping" },
+  // { label: "Prototyping" },
   { label: "Optimization" },
 ];
 
