@@ -63,14 +63,29 @@ const concepts: SkillItem[] = [
 ];
 
 function getYoutubeHoverSrc(url: string, offset?: number): string {
-  const videoId: string = url.split("/").pop() ?? "";
+  let videoId: string | null = null;
 
-  if (videoId.length === 0) {
+  try {
+    const parsed = new URL(url);
+
+    if (parsed.hostname.includes("youtu.be")) {
+      videoId = parsed.pathname.replace("/", "");
+    } else if (parsed.pathname.includes("/embed/")) {
+      videoId = parsed.pathname.split("/embed/")[1];
+    } else if (parsed.searchParams.has("v")) {
+      videoId = parsed.searchParams.get("v");
+    }
+  } catch {
+    return url;
+  }
+
+  if (!videoId) {
     return url;
   }
 
   const start = offset ?? 0;
-  return `${url}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0&start=${start}`;
+
+  return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0&playsinline=1&start=${start}`;
 }
 
 function getYoutubeModalSrc(url: string, offset?: number): string {
