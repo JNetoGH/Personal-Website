@@ -191,6 +191,14 @@ export default function GameDeveloperPortfolio() {
     };
   }, []);
 
+  // ==============================================
+  // YOUTUBE / PREVIEW NETWORK WARMUP
+  // Keeps first video interactions feeling faster by:
+  // - preconnecting to YouTube-related domains
+  // - DNS-prefetching video/thumbnail hosts
+  // Note: this is the lightweight warmup section.
+  // If preview startup speed is revisited later, come back here first.
+  // ==============================================
   useEffect(() => {
     if (selectedGame) {
       document.body.style.overflow = "hidden";
