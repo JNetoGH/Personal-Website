@@ -115,31 +115,31 @@ function renderSkillStar(): JSX.Element {
 function renderPlatformIcon(platform: string): JSX.Element | null {
   if (platform === "PC") {
     return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="5" width="18" height="11" rx="2" stroke="currentColor" strokeWidth="1.8"/>
-        <path d="M9 19H15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-        <path d="M12 16V19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-      </svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="5" width="18" height="11" rx="2" stroke="currentColor" strokeWidth="1.8"/>
+          <path d="M9 19H15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+          <path d="M12 16V19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+        </svg>
     );
   }
 
   if (platform === "Mobile") {
     return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="7" y="2.5" width="10" height="19" rx="2.5" stroke="currentColor" strokeWidth="1.8"/>
-        <path d="M10.5 5H13.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-        <circle cx="12" cy="18" r="0.9" fill="currentColor"/>
-      </svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="7" y="2.5" width="10" height="19" rx="2.5" stroke="currentColor" strokeWidth="1.8"/>
+          <path d="M10.5 5H13.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+          <circle cx="12" cy="18" r="0.9" fill="currentColor"/>
+        </svg>
     );
   }
 
   if (platform === "VR") {
     return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 9.5C4 7.84315 5.34315 6.5 7 6.5H17C18.6569 6.5 20 7.84315 20 9.5V13.2C20 14.8569 18.6569 16.2 17 16.2H14.3L12.7 13.9C12.3728 13.43 11.6272 13.43 11.3 13.9L9.7 16.2H7C5.34315 16.2 4 14.8569 4 13.2V9.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
-        <circle cx="8.5" cy="11.3" r="1.1" fill="currentColor"/>
-        <circle cx="15.5" cy="11.3" r="1.1" fill="currentColor"/>
-      </svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-zinc-100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 9.5C4 7.84315 5.34315 6.5 7 6.5H17C18.6569 6.5 20 7.84315 20 9.5V13.2C20 14.8569 18.6569 16.2 17 16.2H14.3L12.7 13.9C12.3728 13.43 11.6272 13.43 11.3 13.9L9.7 16.2H7C5.34315 16.2 4 14.8569 4 13.2V9.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+          <circle cx="8.5" cy="11.3" r="1.1" fill="currentColor"/>
+          <circle cx="15.5" cy="11.3" r="1.1" fill="currentColor"/>
+        </svg>
     );
   }
 
@@ -361,7 +361,7 @@ export default function GameDeveloperPortfolio() {
   useEffect(() => {
     const updateMobilePreview = () => {
       const cards: HTMLElement[] = Array.from(
-        document.querySelectorAll<HTMLElement>("[data-preview-card]")
+          document.querySelectorAll<HTMLElement>("[data-preview-card]")
       );
 
       if (cards.length === 0) {
@@ -370,7 +370,7 @@ export default function GameDeveloperPortfolio() {
       }
 
       const viewportCenter: number =
-        window.innerHeight * (1 - PLAY_VIDEO_PREVIEW_MOBILE_HEIGHT_PERCENT / 100);
+          window.innerHeight * (1 - PLAY_VIDEO_PREVIEW_MOBILE_HEIGHT_PERCENT / 100);
       let closestId: string | null = null;
       let closestDistance: number = Number.POSITIVE_INFINITY;
 
@@ -544,7 +544,7 @@ export default function GameDeveloperPortfolio() {
   const MOBILE_COLLAPSE_SCROLL_INDEX: number = MOBILE_VISIBLE_GAMES_COUNT - 1;
   const isDesktop: boolean = !isMobile;
   const visibleGames: GameData[] =
-    showAllGamesMobile || isDesktop ? games : games.slice(0, MOBILE_VISIBLE_GAMES_COUNT);
+      showAllGamesMobile || isDesktop ? games : games.slice(0, MOBILE_VISIBLE_GAMES_COUNT);
   const currentMobilePreview: string | null = isMobile ? activeMobilePreview : null;
 
   const handleToggleGamesMobile = () => {
@@ -574,15 +574,15 @@ export default function GameDeveloperPortfolio() {
 
   return (
       <div
-        translate="no"
-        className="notranslate min-h-screen overflow-x-hidden bg-[#060814] text-zinc-100 selection:bg-violet-300/30 selection:text-white"
+          translate="no"
+          className="notranslate min-h-screen overflow-x-hidden bg-[#060814] text-zinc-100 selection:bg-violet-300/30 selection:text-white"
       >
         <header
-          ref={headerRef}
-          className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-md transition-all duration-500"
-          style={{
-            backgroundColor: `rgba(6,8,20,${HEADER_OPACITY_BLUR_PERCENT / 100})`
-          }}
+            ref={headerRef}
+            className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-md transition-all duration-500"
+            style={{
+              backgroundColor: `rgba(6,8,20,${HEADER_OPACITY_BLUR_PERCENT / 100})`
+            }}
         >
           <div className={`mx-auto flex max-w-7xl flex-col items-start gap-3 px-6 ${HEADER_VERTICAL_PADDING} md:flex-row md:items-center md:justify-between lg:px-8`}>
             <div>
@@ -603,33 +603,33 @@ export default function GameDeveloperPortfolio() {
 
             <nav className="flex flex-wrap gap-4 text-sm text-zinc-300 md:gap-6">
               <button
-                type="button"
-                onClick={() => scrollTo("profile")}
-                className={`flex flex-col items-center leading-none transition ${activeSection === "profile" ? "text-violet-300" : "hover:text-white"}`}
+                  type="button"
+                  onClick={() => scrollTo("profile")}
+                  className={`flex flex-col items-center leading-none transition ${activeSection === "profile" ? "text-violet-300" : "hover:text-white"}`}
               >
                 <div className={`h-[2px] w-5 rounded bg-violet-300 transition-opacity ${activeSection === "profile" ? "opacity-100" : "opacity-0"}`} />
                 <span className="mt-[3px]">Profile</span>
               </button>
               <button
-                type="button"
-                onClick={() => scrollTo("games")}
-                className={`flex flex-col items-center leading-none transition ${activeSection === "games" ? "text-violet-300" : "hover:text-white"}`}
+                  type="button"
+                  onClick={() => scrollTo("games")}
+                  className={`flex flex-col items-center leading-none transition ${activeSection === "games" ? "text-violet-300" : "hover:text-white"}`}
               >
                 <div className={`h-[2px] w-5 rounded bg-violet-300 transition-opacity ${activeSection === "games" ? "opacity-100" : "opacity-0"}`} />
                 <span className="mt-[3px]">Games</span>
               </button>
               <button
-                type="button"
-                onClick={() => scrollTo("skills")}
-                className={`flex flex-col items-center leading-none transition ${activeSection === "skills" ? "text-violet-300" : "hover:text-white"}`}
+                  type="button"
+                  onClick={() => scrollTo("skills")}
+                  className={`flex flex-col items-center leading-none transition ${activeSection === "skills" ? "text-violet-300" : "hover:text-white"}`}
               >
                 <div className={`h-[2px] w-5 rounded bg-violet-300 transition-opacity ${activeSection === "skills" ? "opacity-100" : "opacity-0"}`} />
                 <span className="mt-[3px]">Skills</span>
               </button>
               <button
-                type="button"
-                onClick={() => scrollTo("contact")}
-                className={`flex flex-col items-center leading-none transition ${activeSection === "contact" ? "text-violet-300" : "hover:text-white"}`}
+                  type="button"
+                  onClick={() => scrollTo("contact")}
+                  className={`flex flex-col items-center leading-none transition ${activeSection === "contact" ? "text-violet-300" : "hover:text-white"}`}
               >
                 <div className={`h-[2px] w-5 rounded bg-violet-300 transition-opacity ${activeSection === "contact" ? "opacity-100" : "opacity-0"}`} />
                 <span className="mt-[3px]">Contact</span>
@@ -644,11 +644,11 @@ export default function GameDeveloperPortfolio() {
               className="border-b border-white/5 bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.16),_rgba(30,41,59,0.08),_transparent_60%),linear-gradient(180deg,_#060814_0%,_#0b1020_55%,_#0a0d18_100%)]"
           >
             <div
-              className={`mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
+                className={`mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
             >
               <div
-                className={`relative transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${profileReady ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
-                style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
+                  className={`relative transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] ${profileReady ? "translate-y-0 opacity-100" : SECTION_ANIMATION_HIDDEN_STATE}`}
+                  style={{ transitionDuration: SECTION_DISPLAY_ANIMATION_DURATION }}
               >
                 <div className="pointer-events-none absolute inset-0 hidden lg:block" style={{ transform: "translateY(-10%)" }}>
                   <div className="accent-rain-line absolute right-[300px] top-[10px] h-[54px] w-[10px] rounded-full bg-violet-300/95" />
@@ -672,11 +672,11 @@ export default function GameDeveloperPortfolio() {
                   <h2 className="max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
                     Gameplay-focused developer building responsive systems for game
                     <span
-                      className={
-                        PROFILE_TYPING_SUFFIXES[profileSuffixIndex].highlight
-                          ? "bg-gradient-to-r from-fuchsia-400 via-violet-500 to-indigo-500 bg-[length:200%_100%] bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(168,85,247,0.55)]"
-                          : ""
-                      }
+                        className={
+                          PROFILE_TYPING_SUFFIXES[profileSuffixIndex].highlight
+                              ? "bg-gradient-to-r from-fuchsia-400 via-violet-500 to-indigo-500 bg-[length:200%_100%] bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(168,85,247,0.55)]"
+                              : ""
+                        }
                     >
                       {PROFILE_TYPING_SUFFIXES[profileSuffixIndex].text.slice(0, profileTypedLength)}
                     </span>
@@ -685,12 +685,12 @@ export default function GameDeveloperPortfolio() {
 
                   <div className="relative shrink-0">
                     <div
-                      className="controller-clipart pointer-events-none absolute top-1/2 z-10 -translate-y-1/2 -rotate-[18deg] drop-shadow-[0_10px_20px_rgba(0,0,0,0.45)]"
-                      style={{
-                        width: CONTROLLER_CLIPART_SIZE_PX,
-                        ["--controller-left-desktop" as string]: `${CONTROLLER_CLIPART_OFFSET_X_DESKTOP_PX}px`,
-                        ["--controller-left-mobile" as string]: `${CONTROLLER_CLIPART_OFFSET_X_MOBILE_PX}px`
-                      } as CSSProperties}
+                        className="controller-clipart pointer-events-none absolute top-1/2 z-10 -translate-y-1/2 -rotate-[18deg] drop-shadow-[0_10px_20px_rgba(0,0,0,0.45)]"
+                        style={{
+                          width: CONTROLLER_CLIPART_SIZE_PX,
+                          ["--controller-left-desktop" as string]: `${CONTROLLER_CLIPART_OFFSET_X_DESKTOP_PX}px`,
+                          ["--controller-left-mobile" as string]: `${CONTROLLER_CLIPART_OFFSET_X_MOBILE_PX}px`
+                        } as CSSProperties}
                     >
                       <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-auto w-full">
                         <path d="M24 50C27 39 37 32 49 32H79C91 32 101 39 104 50L110 73C114 88 103 102 88 102C80 102 73 98 69 92L66 88C64.8 86.5 63.2 86.5 62 88L59 92C55 98 48 102 40 102C25 102 14 88 18 73L24 50Z" fill="#F4F5F7"/>
@@ -760,7 +760,7 @@ export default function GameDeveloperPortfolio() {
 
           <section id="games" className="border-t border-white/5 bg-[#070b16]">
             <div
-              className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
+                className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
             >
               <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:inset-x-8"></div>
               <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -774,152 +774,158 @@ export default function GameDeveloperPortfolio() {
 
               <div className="relative">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleGames.map((game) => {
+                  {visibleGames.map((game) => {
                     const isGameFocused: boolean = currentMobilePreview === game.title;
                     const isGameBannerActive: boolean = isGameFocused || hoveredGameCardTitle === game.title;
-                    const ctaRibbonText: string = isMobile ? "tap ‎ to ‎ open" : "click ‎ to ‎  open";
 
                     return (
-                    <article
-                        key={game.title}
-                        ref={(element) => {
-                          gameCardRefs.current[games.findIndex((item) => item.title === game.title)] = element;
-                        }}
-                        data-preview-card={game.title}
-                        onClick={() => navigate(`/games/${game.slug}`)}
-                        onMouseEnter={() => {
-                          if (!isMobile) {
-                            setHoveredGameCardTitle(game.title);
-                          }
-                        }}
-                        onMouseLeave={() => {
-                          setHoveredGameCardTitle((previous) => (previous === game.title ? null : previous));
-                        }}
-                        className={`group game-card cursor-pointer overflow-hidden rounded-[28px] border border-zinc-800 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-white/15 hover:bg-white/[0.05] hover:shadow-black/35 will-change-transform ${isGameBannerActive ? "game-card-banner-active" : ""} ${isGameFocused ? "mobile-preview-active" : ""}`}
-                    >
-                      <div className="relative isolate aspect-[15/8.45] overflow-hidden rounded-t-[28px]">
-                        <img
-                            src={game.image}
-                            alt={game.title}
-                            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-                                game.video || game.youtube
-                                    ? currentMobilePreview === game.title
-                                        ? "opacity-0 sm:opacity-100 sm:group-hover:opacity-0"
-                                        : "opacity-100 sm:group-hover:opacity-0"
-                                    : "opacity-100"
-                            }`}
-                        />
+                        <article
+                            key={game.title}
+                            ref={(element) => {
+                              gameCardRefs.current[games.findIndex((item) => item.title === game.title)] = element;
+                            }}
+                            data-preview-card={game.title}
+                            onClick={() => navigate(`/games/${game.slug}`)}
+                            onMouseEnter={() => {
+                              if (!isMobile) {
+                                setHoveredGameCardTitle(game.title);
+                              }
+                            }}
+                            onMouseLeave={() => {
+                              setHoveredGameCardTitle((previous) => (previous === game.title ? null : previous));
+                            }}
+                            className={`group game-card cursor-pointer overflow-hidden rounded-[28px] border border-zinc-800 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-white/15 hover:bg-white/[0.05] hover:shadow-black/35 will-change-transform ${isGameBannerActive ? "game-card-banner-active" : ""} ${isGameFocused ? "mobile-preview-active" : ""}`}
+                        >
+                          <div className="relative isolate aspect-[15/8.45] overflow-hidden rounded-t-[28px]">
+                            <img
+                                src={game.image}
+                                alt={game.title}
+                                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+                                    game.video || game.youtube
+                                        ? currentMobilePreview === game.title
+                                            ? "opacity-0 sm:opacity-100 sm:group-hover:opacity-0"
+                                            : "opacity-100 sm:group-hover:opacity-0"
+                                        : "opacity-100"
+                                }`}
+                            />
 
-                        {game.video ? (
-                            <video
-                                src={game.video}
-                                autoPlay
-                                muted
-                                loop
-                                playsInline
-                                onLoadedMetadata={(e) => {
-                                  const video = e.currentTarget;
-                                  const offset = game.videoStartOffset ?? 0;
-                                  const targetTime = Math.min(offset, Math.max(0, video.duration - 0.1));
-                                  video.currentTime = Number.isFinite(targetTime) ? targetTime : offset;
-                                }}
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                }}
-                                className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-                                    currentMobilePreview === game.title
-                                        ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
-                                        : "opacity-0 sm:group-hover:opacity-100"
-                                }`}
-                            />
-                        ) : game.youtube ? (
-                            <iframe
-                                src={getYoutubeHoverSrc(game.youtube, game.videoStartOffset)}
-                                title={`${game.title} preview`}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerPolicy="strict-origin-when-cross-origin"
-                                allowFullScreen
-                                className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-300 ${
-                                    currentMobilePreview === game.title
-                                        ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
-                                        : "opacity-0 sm:group-hover:opacity-100"
-                                }`}
-                            />
-                        ) : null}
-                      </div>
-                      <div className="game-card-cta-ribbon" aria-hidden="true">
-                        <div className="game-card-cta-ribbon-inner">
-                          <span className="game-card-cta-ribbon-text flex items-center">
-                            <span>{ctaRibbonText}</span>
-                          </span>
-                        </div>
-                      </div>
-                      <div className="game-card-body p-5">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <h3 className="text-2xl font-semibold tracking-tight">{game.title}</h3>
-                            {renderPlatformIcon(game.platform)}
-                          </div>
+                            {game.video ? (
+                                <video
+                                    src={game.video}
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    onLoadedMetadata={(e) => {
+                                      const video = e.currentTarget;
+                                      const offset = game.videoStartOffset ?? 0;
+                                      const targetTime = Math.min(offset, Math.max(0, video.duration - 0.1));
+                                      video.currentTime = Number.isFinite(targetTime) ? targetTime : offset;
+                                    }}
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = "none";
+                                    }}
+                                    className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+                                        currentMobilePreview === game.title
+                                            ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                                            : "opacity-0 sm:group-hover:opacity-100"
+                                    }`}
+                                />
+                            ) : game.youtube ? (
+                                <iframe
+                                    src={getYoutubeHoverSrc(game.youtube, game.videoStartOffset)}
+                                    title={`${game.title} preview`}
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerPolicy="strict-origin-when-cross-origin"
+                                    allowFullScreen
+                                    className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-300 ${
+                                        currentMobilePreview === game.title
+                                            ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                                            : "opacity-0 sm:group-hover:opacity-100"
+                                    }`}
+                                />
+                            ) : null}
+
+                            <div className="absolute top-4 right-4 z-10 pointer-events-none">
                           <span
-                            className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium ${
-                              game.status === "Published"
-                                ? "border-emerald-400/30 bg-emerald-500/20 text-emerald-300"
-                                : game.status === "In Development"
-                                  ? "border-amber-400/30 bg-amber-500/20 text-amber-300"
-                                  : "border-violet-400/30 bg-violet-500/20 text-violet-300"
-                            }`}
+                              className={`rounded-full border px-3 py-1 text-xs font-semibold backdrop-blur-md shadow-lg ${
+                                  game.status === "Published"
+                                      ? "border-emerald-400/40 bg-emerald-500/30 text-emerald-100"
+                                      : game.status === "In Development"
+                                          ? "border-amber-400/40 bg-amber-500/30 text-amber-100"
+                                          : "border-violet-400/40 bg-violet-500/30 text-violet-100"
+                              }`}
                           >
                             {game.status === "In Development" ? "In Dev" : game.status}
                           </span>
-                        </div>
-                        <p className="mt-1 text-sm text-zinc-400">
-                          {game.genre} • {game.platform} • {game.year}
-                        </p>
-                        <p className="mt-3 text-sm leading-6 text-zinc-300">{game.quickDescription}</p>
-
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          {game.tags.map((tag: string) => (
-                              <span
-                                  key={tag}
-                                  className="rounded-full border border-white/5 bg-white/[0.04] px-3 py-1 text-xs text-zinc-300"
+                            </div>
+                          </div>
+                          <div className="game-card-body p-5">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <h3 className="text-2xl font-semibold tracking-tight">{game.title}</h3>
+                                {renderPlatformIcon(game.platform)}
+                              </div>
+                              <button
+                                  type="button"
+                                  className="shrink-0 flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-purple-500/20 transition-all hover:-translate-y-0.5 hover:brightness-110 active:scale-95"
                               >
+                                Open
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                  <polyline points="15 3 21 3 21 9"></polyline>
+                                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                              </button>
+                            </div>
+                            <p className="mt-1 text-sm text-zinc-400">
+                              {game.genre} • {game.platform} • {game.year}
+                            </p>
+                            <p className="mt-3 text-sm leading-6 text-zinc-300">{game.quickDescription}</p>
+
+                            <div className="mt-4 flex flex-wrap gap-2">
+                              {game.tags.map((tag: string) => (
+                                  <span
+                                      key={tag}
+                                      className="rounded-full border border-white/5 bg-white/[0.04] px-3 py-1 text-xs text-zinc-300"
+                                  >
                           {tag}
                         </span>
-                          ))}
-                        </div>
+                              ))}
+                            </div>
 
-                      </div>
-                    </article>
+                          </div>
+                        </article>
                     );
-                })}
+                  })}
                 </div>
 
                 {!showAllGamesMobile && games.length > MOBILE_VISIBLE_GAMES_COUNT && (
-                  <div className="pointer-events-none absolute inset-x-0 bottom-16 h-24 bg-gradient-to-b from-transparent via-[#070b16]/85 to-[#070b16] sm:hidden"></div>
+                    <div className="pointer-events-none absolute inset-x-0 bottom-16 h-24 bg-gradient-to-b from-transparent via-[#070b16]/85 to-[#070b16] sm:hidden"></div>
                 )}
 
                 {games.length > MOBILE_VISIBLE_GAMES_COUNT && (
-                  <div className="mt-6 flex justify-center sm:hidden">
-                    <button
-                      type="button"
-                      onClick={handleToggleGamesMobile}
-                      className={`inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-medium text-white transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.99] ${
-                        showAllGamesMobile
-                          ? "bg-gradient-to-r from-rose-500 via-red-500 to-orange-500"
-                          : "bg-gradient-to-r from-fuchsia-500 via-violet-500 to-indigo-500"
-                      }`}
-                    >
-                      {showAllGamesMobile ? "Show less" : "See more"}
-                      <svg
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                        className={`games-toggle-chevron h-4 w-4 transition-transform duration-300 ${showAllGamesMobile ? "rotate-180" : "rotate-0"}`}                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                    <div className="mt-6 flex justify-center sm:hidden">
+                      <button
+                          type="button"
+                          onClick={handleToggleGamesMobile}
+                          className={`inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-medium text-white transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.99] ${
+                              showAllGamesMobile
+                                  ? "bg-gradient-to-r from-rose-500 via-red-500 to-orange-500"
+                                  : "bg-gradient-to-r from-fuchsia-500 via-violet-500 to-indigo-500"
+                          }`}
                       >
-                        <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
+                        {showAllGamesMobile ? "Show less" : "See more"}
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                            className={`games-toggle-chevron h-4 w-4 transition-transform duration-300 ${showAllGamesMobile ? "rotate-180" : "rotate-0"}`}                        fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                    </div>
                 )}
               </div>
             </div>
@@ -927,7 +933,7 @@ export default function GameDeveloperPortfolio() {
 
           <section id="skills" className="border-t border-white/5 bg-[#080d19]">
             <div
-              className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
+                className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
             >
               <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:inset-x-8"></div>
               <div className="mb-10">
@@ -946,12 +952,12 @@ export default function GameDeveloperPortfolio() {
 
                     <div className="flex flex-wrap gap-3">
                       {technologies.map((technology) => (
-                        <span
-                          key={technology.label}
-                          className={`skill-chip ${technology.starred ? "skill-chip-starred" : ""}`}
-                        >
+                          <span
+                              key={technology.label}
+                              className={`skill-chip ${technology.starred ? "skill-chip-starred" : ""}`}
+                          >
                           {technology.starred ? renderSkillStar() : null}
-                          <span className="relative z-[1]">{technology.label}</span>
+                            <span className="relative z-[1]">{technology.label}</span>
                         </span>
                       ))}
                     </div>
@@ -966,12 +972,12 @@ export default function GameDeveloperPortfolio() {
 
                     <div className="flex flex-wrap gap-3">
                       {concepts.map((concept) => (
-                        <span
-                          key={concept.label}
-                          className={`skill-chip ${concept.starred ? "skill-chip-starred" : ""}`}
-                        >
+                          <span
+                              key={concept.label}
+                              className={`skill-chip ${concept.starred ? "skill-chip-starred" : ""}`}
+                          >
                           {concept.starred ? renderSkillStar() : null}
-                          <span className="relative z-[1]">{concept.label}</span>
+                            <span className="relative z-[1]">{concept.label}</span>
                         </span>
                       ))}
                     </div>
@@ -983,7 +989,7 @@ export default function GameDeveloperPortfolio() {
 
           <section id="contact" className="border-t border-white/10 bg-[#070b16]">
             <div
-              className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
+                className={`relative mx-auto max-w-7xl px-6 lg:px-8 ${SECTION_VERTICAL_PADDING}`}
             >
               <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:inset-x-8"></div>
               <div className="mb-10">
@@ -1056,133 +1062,10 @@ export default function GameDeveloperPortfolio() {
         </footer>
 
         <style>{`
-        .game-card {
-          --game-card-cta-height: 25px;
-        }
-
-        .game-card-cta-ribbon {
-          position: relative;
-          z-index: 3;
-          width: 100%;
-          height: var(--game-card-cta-height);
-          margin-top: calc(var(--game-card-cta-height) * -1);
-          pointer-events: none;
-          opacity: 0;
-          transform: translateY(100%) scaleY(0.96);
-          transition:
-            transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
-            opacity 220ms ease,
-            filter 260ms ease;
-          filter: saturate(1) brightness(1);
-        }
-
-        .game-card-cta-ribbon-inner {
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-          border-radius: 0;
-          border-top: 1px solid rgba(255,255,255,0.16);
-          border-bottom: 1px solid rgba(168,85,247,0.42);
-          background:
-            linear-gradient(180deg, rgba(19,24,44,0.92) 0%, rgba(17,22,40,0.98) 100%),
-            linear-gradient(90deg,
-              rgba(244,114,182,0.34) 0%,
-              rgba(168,85,247,0.38) 24%,
-              rgba(139,92,246,0.42) 48%,
-              rgba(99,102,241,0.34) 72%,
-              rgba(59,130,246,0.30) 100%
-            );
-          box-shadow:
-            0 10px 28px rgba(0, 0, 0, 0.32),
-            0 0 22px rgba(168,85,247,0.18),
-            inset 0 1px 0 rgba(255,255,255,0.12),
-            inset 0 -1px 0 rgba(168,85,247,0.18);
-        }
-
-        .game-card-cta-ribbon-inner::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background:
-            linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 28%, rgba(255,255,255,0) 60%),
-            linear-gradient(90deg,
-              rgba(244,114,182,0.18) 0%,
-              rgba(168,85,247,0.26) 28%,
-              rgba(255,255,255,0.24) 50%,
-              rgba(99,102,241,0.20) 72%,
-              rgba(59,130,246,0.16) 100%
-            );
-          pointer-events: none;
-        }
-
-        .game-card-cta-ribbon-inner::after {
-          content: "";
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: -24%;
-          width: 24%;
-          background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.28) 48%, rgba(255,255,255,0) 100%);
-          opacity: 0;
-          transform: skewX(-24deg);
-          pointer-events: none;
-        }
-
-        .game-card-cta-ribbon-text {
-          position: relative;
-          z-index: 1;
-          font-size: 0.92rem;
-          font-weight: 700;
-          letter-spacing: 0.03em;
-          text-transform: uppercase;
-          color: rgba(255,255,255,0.985);
-          text-shadow:
-            0 1px 10px rgba(0,0,0,0.34),
-            0 0 18px rgba(168,85,247,0.24);
-        }
-
         .game-card-body {
           position: relative;
           transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
           will-change: transform;
-        }
-
-        .game-card-banner-active .game-card-cta-ribbon,
-        .mobile-preview-active .game-card-cta-ribbon {
-          opacity: 1;
-          transform: translateY(0) scaleY(1);
-          filter: saturate(1.18) brightness(1.1);
-        }
-
-        .game-card-banner-active .game-card-cta-ribbon-inner::after,
-        .mobile-preview-active .game-card-cta-ribbon-inner::after {
-          opacity: 1;
-          animation: gameCardRibbonGloss 1.15s ease-out;
-        }
-
-        @keyframes gameCardRibbonGloss {
-          0% {
-            left: -24%;
-            opacity: 0;
-          }
-          12% {
-            opacity: 0.55;
-          }
-          100% {
-            left: 108%;
-            opacity: 0;
-          }
-        }
-
-        @media (max-width: 639px) {
-          .game-card-cta-ribbon-text {
-            font-size: 0.8rem;
-            letter-spacing: 0.02em;
-          }
         }
 
         .skill-chip {

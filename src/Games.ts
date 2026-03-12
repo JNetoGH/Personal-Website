@@ -44,7 +44,7 @@ export const games: GameData[] = [
             "Modular enemy systems",
             "Readable attack telegraphs",
         ],
-        tags: ["Boss Combat", "Encounter Design", "Action"],
+        tags: ["Boss Fight", "Encounter Design", "Action"],
         image: "/thumbnails/indigo-force-thumbnail.png",
         galleryPath: "indigo-force",
         youtube: "https://www.youtube.com/embed/Ukafi9JuWig",

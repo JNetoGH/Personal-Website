@@ -148,16 +148,16 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
                                     </p>
                                 </div>
 
-                                <div className="hidden shrink-0 flex-wrap items-center gap-3 lg:flex lg:justify-end lg:place-self-end">
-                                    <span className={`rounded-full border px-4 py-2 text-sm font-medium ${getStatusClasses(game.status)}`}>
+                                <div className="hidden shrink-0 flex-wrap items-center gap-2.5 lg:flex lg:justify-end lg:place-self-end">
+                                    <span className={`rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wider ${getStatusClasses(game.status)}`}>
                                         {game.status === "In Development" ? "In Dev" : game.status}
                                     </span>
 
-                                    <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-200">
+                                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-wider text-zinc-300">
                                         {game.genre}
                                     </span>
 
-                                    <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-200">
+                                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-wider text-zinc-300">
                                         {game.year}
                                     </span>
                                 </div>
@@ -173,7 +173,7 @@ export default function GameProjectPage({ onBack }: GamePageProps): JSX.Element 
           href={game.link}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-11 min-w-[180px] items-center justify-center rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 px-8 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]"
+          className="inline-flex h-11 min-w-[234px] items-center justify-center rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 px-8 text-sm font-bold uppercase tracking-wider text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]"
         >
           {game.cta}
         </a>
